@@ -1,0 +1,26 @@
+{
+  "header": {
+    "profile": "Профиль",
+    "ratings": "Рейтинг",
+    "groups": "Группы",
+    "tasks": "Задачи",
+    "chat": "Чат",
+    "logout": "Выйти"
+  },
+  "auth": {
+    "login": "Вход",
+    "register": "Регистрация",
+    "email": "Электронная почта",
+    "password": "Пароль",
+    "loginButton": "Войти",
+    "registerButton": "Зарегистрироваться",
+    "forgotPassword": "Забыли пароль?",
+    "haveAccount": "Уже есть аккаунт?",
+    "noAccount": "Нет аккаунта?"
+  },
+  "language": {
+    "kz": "Казахский",
+    "ru": "Русский",
+    "en": "Английский"
+  }
+}

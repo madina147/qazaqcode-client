@@ -1,0 +1,20 @@
+.language-switcher {
+  display: flex;
+  gap: 5px;
+  margin-left: 15px;
+} 
+
+.language-switcher button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.language-switcher button.active {
+  background: rgba(255, 255, 255, 0.3);
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}

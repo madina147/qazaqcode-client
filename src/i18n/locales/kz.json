@@ -1,0 +1,26 @@
+{
+  "header": {
+    "profile": "Профиль",
+    "ratings": "Рейтинг",
+    "groups": "Топтар",
+    "tasks": "Тапсырмалар",
+    "chat": "Чат",
+    "logout": "Шығу"
+  },
+  "auth": {
+    "login": "Кіру",
+    "register": "Тіркелу",
+    "email": "Электрондық пошта",
+    "password": "Құпия сөз",
+    "loginButton": "Кіру",
+    "registerButton": "Тіркелу",
+    "forgotPassword": "Құпия сөзді ұмыттыңыз ба?",
+    "haveAccount": "Тіркелгіңіз бар ма?",
+    "noAccount": "Тіркелгіңіз жоқ па?"
+  },
+  "language": {
+    "kz": "Қазақша",
+    "ru": "Орысша",
+    "en": "Ағылшынша"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "profile": "Profile",
+    "ratings": "Ratings",
+    "groups": "Groups",
+    "tasks": "Tasks",
+    "chat": "Chat",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "alreadyHaveAccount": "Already have an account? Login",
+    "dontHaveAccount": "Don't have an account? Register"
+  },
+  "language": {
+    "kz": "Kazakh",
+    "ru": "Russian",
+    "en": "English"
+  }
+}

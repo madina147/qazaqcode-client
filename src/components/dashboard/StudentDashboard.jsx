@@ -1,0 +1,274 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
+import { getUserProfile, updateUserProfile, getStudentGroups } from '../../services/api';
+import './Dashboard.scss';
+
+const StudentDashboard = () => {
+  const { user, loading: authLoading } = useAuth();
+  const [userProfile, setUserProfile] = useState(null);
+  const [groups, setGroups] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    firstName: '',
+    lastName: '',
+    middleName: '',
+    grade: '',
+    gradeLetter: '',
+  });
+
+  
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const grades = [7, 8, 9, 10, 11];
+  const gradeLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [profileResponse, groupsResponse] = await Promise.all([
+          getUserProfile(),
+          getStudentGroups()
+        ]);
+        
+        setUserProfile(profileResponse.data);
+        setGroups(groupsResponse.data);
+        
+        // Initialize form data
+        setEditFormData({
+          firstName: profileResponse.data.firstName,
+          lastName: profileResponse.data.lastName,
+          middleName: profileResponse.data.middleName || '',
+          grade: profileResponse.data.grade,
+          gradeLetter: profileResponse.data.gradeLetter,
+        });
+      } catch (err) {
+        setError('Профиль деректерін жүктеу сәтсіз аяқталды');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (!authLoading && user) {
+      fetchData();
+    }
+  }, [authLoading, user]);
+
+  const handleEditToggle = () => {
+    if (isEditing) {
+      // Cancel edit - reset form data
+      setEditFormData({
+        firstName: userProfile.firstName,
+        lastName: userProfile.lastName,
+        middleName: userProfile.middleName || '',
+        grade: userProfile.grade,
+        gradeLetter: userProfile.gradeLetter,
+      });
+    }
+    setIsEditing(!isEditing);
+    setError('');
+    setSuccessMessage('');
+  };
+
+  const handleInputChange = (e) => {
+    setEditFormData({
+      ...editFormData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccessMessage('');
+    
+    try {
+      setLoading(true);
+      const { data } = await updateUserProfile(editFormData);
+      
+      setUserProfile({
+        ...userProfile,
+        ...data,
+      });
+      
+      setSuccessMessage('Профиль сәтті жаңартылды');
+      setIsEditing(false);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Профильді жаңарту сәтсіз аяқталды');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading && !userProfile) {
+    return <div className="dashboard-loading">Жүктелуде...</div>;
+  }
+
+  return (
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <h1>Менің профилім</h1>
+        <button 
+          className={`edit-button ${isEditing ? 'cancel' : ''}`}
+          onClick={handleEditToggle}
+        >
+          {isEditing ? 'Бас тарту' : 'Өзгерту'}
+        </button>
+      </div>
+      
+      {error && <div className="dashboard-error">{error}</div>}
+      {successMessage && <div className="dashboard-success">{successMessage}</div>}
+      
+      {userProfile && (
+        <div className="dashboard-content">
+          <div className="profile-section">
+            <h2>Жеке ақпарат</h2>
+            
+            {isEditing ? (
+              <form onSubmit={handleSubmit} className="edit-form">
+                <div className="form-group">
+                  <label htmlFor="lastName">Тегі</label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    value={editFormData.lastName}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="firstName">Аты</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    value={editFormData.firstName}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="middleName">Әкесінің аты</label>
+                  <input
+                    type="text"
+                    id="middleName"
+                    name="middleName"
+                    value={editFormData.middleName}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="grade">Сынып</label>
+                    <select
+                      id="grade"
+                      name="grade"
+                      value={editFormData.grade}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      {grades.map((grade) => (
+                        <option key={grade} value={grade}>
+                          {grade}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="gradeLetter">Сыныптың әрпі</label>
+                    <select
+                      id="gradeLetter"
+                      name="gradeLetter"
+                      value={editFormData.gradeLetter}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      {gradeLetters.map((letter) => (
+                        <option key={letter} value={letter}>
+                          {letter}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <button type="submit" className="save-button" disabled={loading}>
+                  {loading ? 'Сақталуда...' : 'Сақтау'}
+                </button>
+              </form>
+            ) : (
+              <div className="profile-info">
+                <div className="info-row">
+                  <span className="info-label">ID:</span>
+                  <span className="info-value">{userProfile._id}</span>
+                </div>
+                <div className="info-row">
+                  <span className="info-label">ФИО:</span>
+                  <span className="info-value">
+                    {userProfile.lastName} {userProfile.firstName} {userProfile.middleName || ''}
+                  </span>
+                </div>
+                <div className="info-row">
+                  <span className="info-label">Сынып:</span>
+                  <span className="info-value">
+                    {userProfile.grade}-{userProfile.gradeLetter}
+                  </span>
+                </div>
+                <div className="info-row">
+                  <span className="info-label">Логин:</span>
+                  <span className="info-value">{userProfile.login}</span>
+                </div>
+                <div className="info-row">
+                  <span className="info-label">Баллы:</span>
+                  <span className="info-value points">{userProfile.points}</span>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <div className="groups-section">
+            <h2>Менің топтарым</h2>
+            {groups.length > 0 ? (
+              <div className="groups-list">
+                {groups.map((group) => (
+                  <Link to={`/groups/${group._id}`} key={group._id} className="group-card">
+                    <h3>{group.name}</h3>
+                    <p className="group-teacher">
+                      Мұғалім: {group.teacher?.firstName} {group.teacher?.lastName}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <p className="empty-message">
+                Сіз ешқандай топта жоқсыз. Мұғалім сізді топқа қосуы керек.
+              </p>
+            )}
+          </div>
+          
+          <div className="quick-links">
+            <Link to="/ratings" className="quick-link-card quick-link-ratings">
+              <h3>Рейтинг</h3>
+              <p>Жалпы рейтингтегі орныңызды қараңыз</p>
+            </Link>
+            <Link to="/lessons" className="quick-link-card quick-link-materials">
+              <h3>Сабақтар</h3>
+              <p>Сабақтарды өтіп, тапсырмаларды шешіңіз</p>
+            </Link>
+            <Link to="/chat" className="quick-link-card quick-link-chat">
+              <h3>Чат</h3>
+              <p>Басқа оқушылармен және мұғалімдермен сөйлесіңіз</p>
+            </Link>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default StudentDashboard;

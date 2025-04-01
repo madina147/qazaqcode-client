@@ -1,0 +1,126 @@
+/* Стили для стеклянного хедера - современный дизайн */
+
+/* Основной хедер с эффектом блюра */
+.main-header {
+  background: linear-gradient(135deg, #004c40 0%, #00796b 80%, #48a999 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* Линия-разделитель под хедером */
+.main-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0.7;
+}
+
+/* Контейнер хедера */
+.header-container {
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+/* Стили логотипа */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  position: relative;
+  z-index: 1;
+}
+
+/* Эффект свечения для логотипа */
+.logo::before {
+  content: '';
+  position: absolute;
+  left: -15px;
+  top: -15px;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  filter: blur(10px);
+  z-index: -1;
+}
+
+/* Стили ссылки логотипа */
+.logo a {
+  color: white;
+  text-decoration: none;
+  background: linear-gradient(90deg, #ffffff, rgba(255, 255, 255, 0.8), #ffffff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+  transition: all 0.3s ease;
+}
+
+/* Эффект при наведении на логотип */
+.logo a:hover {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Навигация */
+.main-nav ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 5px;
+}
+
+.main-nav ul li {
+  margin: 0;
+  position: relative;
+}
+
+/* Пункты навигации */
+.main-nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 10px 20px;
+  border-radius: 50px;
+  display: inline-block;
+}
+
+/* Эффект при наведении на пункт навигации */
+.main-nav ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Активный пункт навигации */
+.main-nav ul li a.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Индикатор активного пункта */
+.main-nav ul li a.active::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background-color: white;
+  border-radius: 50%;
+}
