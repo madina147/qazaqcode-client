@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-import { getUserProfile, updateUserProfile, getTeacherGroups, deleteGroup } from '../../services/api';
+import { getUserProfile, updateUserProfile, getStudentGroups } from '../../services/api';
 import './Dashboard.scss';
 
-const TeacherDashboard = () => {
+const StudentDashboard = () => {
   const { user, loading: authLoading } = useAuth();
   const [userProfile, setUserProfile] = useState(null);
   const [groups, setGroups] = useState([]);
@@ -13,12 +13,18 @@ const TeacherDashboard = () => {
     firstName: '',
     lastName: '',
     middleName: '',
-    workplace: '',
-    phoneNumber: '',
+    grade: '',
+    gradeLetter: '',
   });
+
+  
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
+  const grades = [7, 8, 9, 10, 11];
+  const gradeLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,23 +32,19 @@ const TeacherDashboard = () => {
         setLoading(true);
         const [profileResponse, groupsResponse] = await Promise.all([
           getUserProfile(),
-          getTeacherGroups()
+          getStudentGroups()
         ]);
         
         setUserProfile(profileResponse.data);
-        // Сортируем группы, чтобы новые были сверху
-        const sortedGroups = groupsResponse.data.sort((a, b) => {
-          return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-        });
-        setGroups(sortedGroups);
+        setGroups(groupsResponse.data);
         
         // Initialize form data
         setEditFormData({
           firstName: profileResponse.data.firstName,
           lastName: profileResponse.data.lastName,
           middleName: profileResponse.data.middleName || '',
-          workplace: profileResponse.data.workplace,
-          phoneNumber: profileResponse.data.phoneNumber,
+          grade: profileResponse.data.grade,
+          gradeLetter: profileResponse.data.gradeLetter,
         });
       } catch (err) {
         setError('Профиль деректерін жүктеу сәтсіз аяқталды');
@@ -64,8 +66,8 @@ const TeacherDashboard = () => {
         firstName: userProfile.firstName,
         lastName: userProfile.lastName,
         middleName: userProfile.middleName || '',
-        workplace: userProfile.workplace,
-        phoneNumber: userProfile.phoneNumber,
+        grade: userProfile.grade,
+        gradeLetter: userProfile.gradeLetter,
       });
     }
     setIsEditing(!isEditing);
@@ -102,23 +104,6 @@ const TeacherDashboard = () => {
       setLoading(false);
     }
   };
-
-  const handleDeleteGroup = async (groupId) => {
-    if (window.confirm('Бұл топты шынымен жойғыңыз келе ме?')) {
-      try {
-        await deleteGroup(groupId);
-        setGroups(groups.filter(g => g._id !== groupId));
-        setSuccessMessage('Топ сәтті жойылды');
-        setTimeout(() => setSuccessMessage(''), 3000);
-      } catch (err) {
-        setError('Топты жою кезінде қате пайда болды');
-        console.error(err);
-      }
-    }
-  };
-
-  // Отображаем только первые 2 группы
-  const displayedGroups = groups.slice(0, 2);
 
   if (loading && !userProfile) {
     return <div className="dashboard-loading">Жүктелуде...</div>;
@@ -178,27 +163,39 @@ const TeacherDashboard = () => {
                     onChange={handleInputChange}
                   />
                 </div>
-                <div className="form-group">
-                  <label htmlFor="workplace">Жұмыс орны</label>
-                  <input
-                    type="text"
-                    id="workplace"
-                    name="workplace"
-                    value={editFormData.workplace}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="phoneNumber">Телефон нөмірі</label>
-                  <input
-                    type="text"
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    value={editFormData.phoneNumber}
-                    onChange={handleInputChange}
-                    required
-                  />
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="grade">Сынып</label>
+                    <select
+                      id="grade"
+                      name="grade"
+                      value={editFormData.grade}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      {grades.map((grade) => (
+                        <option key={grade} value={grade}>
+                          {grade}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="gradeLetter">Сыныптың әрпі</label>
+                    <select
+                      id="gradeLetter"
+                      name="gradeLetter"
+                      value={editFormData.gradeLetter}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      {gradeLetters.map((letter) => (
+                        <option key={letter} value={letter}>
+                          {letter}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
                 <button type="submit" className="save-button" disabled={loading}>
                   {loading ? 'Сақталуда...' : 'Сақтау'}
@@ -207,84 +204,65 @@ const TeacherDashboard = () => {
             ) : (
               <div className="profile-info">
                 <div className="info-row">
+                  <span className="info-label">ID:</span>
+                  <span className="info-value">{userProfile._id}</span>
+                </div>
+                <div className="info-row">
                   <span className="info-label">ФИО:</span>
                   <span className="info-value">
                     {userProfile.lastName} {userProfile.firstName} {userProfile.middleName || ''}
                   </span>
                 </div>
                 <div className="info-row">
-                  <span className="info-label">Жұмыс орны:</span>
-                  <span className="info-value">{userProfile.workplace}</span>
-                </div>
-                <div className="info-row">
-                  <span className="info-label">Телефон нөмірі:</span>
-                  <span className="info-value">{userProfile.phoneNumber}</span>
+                  <span className="info-label">Сынып:</span>
+                  <span className="info-value">
+                    {userProfile.grade}-{userProfile.gradeLetter}
+                  </span>
                 </div>
                 <div className="info-row">
                   <span className="info-label">Логин:</span>
                   <span className="info-value">{userProfile.login}</span>
+                </div>
+                <div className="info-row">
+                  <span className="info-label">Баллы:</span>
+                  <span className="info-value points">{userProfile.points}</span>
                 </div>
               </div>
             )}
           </div>
           
           <div className="groups-section">
-            <div className="section-header">
-              <h2>Менің топтарым {groups.length > 0 && `(${displayedGroups.length}/${groups.length})`}</h2>
-              <Link to="/groups/create" className="create-button">
-                Топ құру
-              </Link>
-            </div>
-            
+            <h2>Менің топтарым</h2>
             {groups.length > 0 ? (
-              <>
-                <div className="groups-list">
-                  {displayedGroups.map((group) => (
-                    <div key={group._id} className="group-card-container">
-                      <Link to={`/groups/${group._id}`} className="group-card">
-                        <h3>{group.name}</h3>
-                        <p className="group-description">{group.description}</p>
-                        <p className="group-students">
-                          Оқушылар: {group.students?.length || 0}
-                        </p>
-                      </Link>
-                      <button 
-                        onClick={() => handleDeleteGroup(group._id)}
-                        className="delete-group-button"
-                        title="Топты жою"
-                      >
-                        <span>🗑️</span>
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                {groups.length > 2 && (
-                  <div className="show-all-groups">
-                    <Link to="/all-groups" className="show-all-button">
-                      Барлық топтарды көру ({groups.length})
-                    </Link>
-                  </div>
-                )}
-              </>
+              <div className="groups-list">
+                {groups.map((group) => (
+                  <Link to={`/groups/${group._id}`} key={group._id} className="group-card">
+                    <h3>{group.name}</h3>
+                    <p className="group-teacher">
+                      Мұғалім: {group.teacher?.firstName} {group.teacher?.lastName}
+                    </p>
+                  </Link>
+                ))}
+              </div>
             ) : (
               <p className="empty-message">
-                Сізде әзірше құрылған топтар жоқ. Оқушыларды қосу үшін жаңа топ құрыңыз.
+                Сіз ешқандай топта жоқсыз. Мұғалім сізді топқа қосуы керек.
               </p>
             )}
           </div>
           
           <div className="quick-links">
             <Link to="/ratings" className="quick-link-card quick-link-ratings">
-              <h3>Оқушылардың рейтингі</h3>
-              <p>Оқушылардың рейтингі мен үлгерімін қараңыз</p>
+              <h3>Рейтинг</h3>
+              <p>Жалпы рейтингтегі орныңызды қараңыз</p>
             </Link>
             <Link to="/lessons" className="quick-link-card quick-link-materials">
-              <h3>Материалдар</h3>
-              <p>Оқу материалдары мен тапсырмаларды қараңыз</p>
+              <h3>Сабақтар</h3>
+              <p>Сабақтарды өтіп, тапсырмаларды шешіңіз</p>
             </Link>
             <Link to="/chat" className="quick-link-card quick-link-chat">
               <h3>Чат</h3>
-              <p>Оқушылармен және басқа мұғалімдермен сөйлесіңіз</p>
+              <p>Басқа оқушылармен және мұғалімдермен сөйлесіңіз</p>
             </Link>
           </div>
         </div>
@@ -293,4 +271,4 @@ const TeacherDashboard = () => {
   );
 };
 
-export default TeacherDashboard;
+export default StudentDashboard;

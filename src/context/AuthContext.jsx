@@ -1,6 +1,6 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login as loginApi, registerStudent, registerTeacher } from '../services/api';
+import { login as loginApi, registerTeacher, registerStudent } from '../services/api';
 
 export const AuthContext = createContext();
 
@@ -12,7 +12,13 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const userInfo = localStorage.getItem('userInfo');
     if (userInfo) {
-      setUser(JSON.parse(userInfo));
+      const userData = JSON.parse(userInfo);
+      setUser(userData);
+      // Если токен отсутствует, но есть информация о пользователе,
+      // восстановим токен из пользовательских данных
+      if (!localStorage.getItem('token') && userData.token) {
+        localStorage.setItem('token', userData.token);
+      }
     }
     setLoading(false);
   }, []);
@@ -20,8 +26,9 @@ export const AuthProvider = ({ children }) => {
   const login = async (login, password) => {
     try {
       setLoading(true);
-      const { data } = await loginApi({ login, password });
+      const { data } = await loginApi(login, password);
       localStorage.setItem('userInfo', JSON.stringify(data));
+      localStorage.setItem('token', data.token);
       setUser(data);
       navigate(data.role === 'teacher' ? '/dashboard/teacher' : '/dashboard/student');
       return { success: true };
@@ -38,8 +45,10 @@ export const AuthProvider = ({ children }) => {
   const registerStudentUser = async (userData) => {
     try {
       setLoading(true);
-      const { data } = await registerStudent(userData);
+      const studentData = {...userData, role: 'student'};
+      const { data } = await registerStudent(studentData);
       localStorage.setItem('userInfo', JSON.stringify(data));
+      localStorage.setItem('token', data.token);
       setUser(data);
       navigate('/dashboard/student');
       return { success: true };
@@ -56,8 +65,10 @@ export const AuthProvider = ({ children }) => {
   const registerTeacherUser = async (userData) => {
     try {
       setLoading(true);
-      const { data } = await registerTeacher(userData);
+      const teacherData = {...userData, role: 'teacher'};
+      const { data } = await registerTeacher(teacherData);
       localStorage.setItem('userInfo', JSON.stringify(data));
+      localStorage.setItem('token', data.token);
       setUser(data);
       navigate('/dashboard/teacher');
       return { success: true };
@@ -73,6 +84,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('userInfo');
+    localStorage.removeItem('token');
     setUser(null);
     navigate('/login');
   };
@@ -94,6 +106,14 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };
 
 export default AuthContext;

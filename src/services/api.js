@@ -1,125 +1,533 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+// Helper functions
+export const getToken = () => {
+  return localStorage.getItem('token');
+};
+
+export const authHeader = () => {
+  const token = getToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+// Create axios instance with base URL
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Include cookies in cross-origin requests
+  timeout: 30000, // 30 second timeout
+  maxContentLength: 100 * 1024 * 1024, // 100MB
+  maxBodyLength: 100 * 1024 * 1024, // 100MB
 });
 
-// Add a request interceptor for authentication
+// Add request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
-    const userInfo = localStorage.getItem('userInfo');
-    if (userInfo) {
-      const { token } = JSON.parse(userInfo);
+    const token = localStorage.getItem('token');
+    if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
+  (error) => Promise.reject(error)
+);
+
+// Add response interceptor for better error handling
+api.interceptors.response.use(
+  response => response,
+  error => {
+    console.error('API request failed:', error.config?.url);
     return Promise.reject(error);
   }
 );
 
-// Auth Services
-export const registerStudent = (studentData) => {
-  return api.post('/users/register/student', studentData);
+// Authentication
+export const login = (login, password) => {
+  return api.post('/api/users/login', { login, password });
 };
 
-export const registerTeacher = (teacherData) => {
-  return api.post('/users/register/teacher', teacherData);
+export const register = (userData) => {
+  const endpoint = userData.role === 'teacher' 
+    ? '/api/users/register/teacher' 
+    : '/api/users/register/student';
+  return api.post(endpoint, userData);
 };
 
-export const login = (credentials) => {
-  return api.post('/users/login', credentials);
+export const registerTeacher = (userData) => {
+  return api.post('/api/users/register/teacher', userData);
 };
 
-export const forgotPassword = (data) => {
-  return api.post('/users/forgot-password', data);
+export const registerStudent = (userData) => {
+  return api.post('/api/users/register/student', userData);
 };
 
-export const getUserProfile = () => {
-  return api.get('/users/profile');
+export const forgotPassword = (login) => {
+  return api.post('/api/users/forgot-password', { login });
 };
 
-export const updateUserProfile = (data) => {
-  return api.put('/users/profile', data);
-};
-
-// Group Services
-export const createGroup = (groupData) => {
-  return api.post('/groups', groupData);
-};
-
-export const getTeacherGroups = () => {
-  return api.get('/groups');
-};
-
-export const getStudentGroups = () => {
-  return api.get('/groups/student');
-};
-
-export const getGroupDetails = (groupId) => {
-  return api.get(`/groups/${groupId}`);
-};
-
-export const addStudentToGroup = (groupId, studentId) => {
-  return api.post(`/groups/${groupId}/students`, { studentId });
-};
-
-export const removeStudentFromGroup = (groupId, studentId) => {
-  return api.delete(`/groups/${groupId}/students/${studentId}`);
-};
-
-// Lesson Services
-export const getLessons = () => {
-  return api.get('/lessons');
-};
-
-export const getLessonById = (lessonId) => {
-  return api.get(`/lessons/${lessonId}`);
-};
-
-export const completeLesson = (lessonId) => {
-  return api.post(`/lessons/${lessonId}/complete`);
-};
-
-// Test Services
-export const getTestByLessonId = (lessonId) => {
-  return api.get(`/tests/lesson/${lessonId}`);
-};
-
-export const submitTest = (testId, answers) => {
-  return api.post(`/tests/${testId}/submit`, { answers });
-};
-
-// Task Services
-export const getTasksByTestId = (testId) => {
-  return api.get(`/tasks/test/${testId}`);
-};
-
-export const getTaskById = (taskId) => {
-  return api.get(`/tasks/${taskId}`);
-};
-
-export const submitSolution = (taskId, solution, timeSpent) => {
-  return api.post(`/tasks/${taskId}/submit`, { solution, timeSpent });
-};
-
-// Message Services
+// Chat Messages
 export const getMessages = () => {
-  return api.get('/messages');
+  return api.get('/api/messages');
 };
 
 export const sendMessage = (content) => {
-  return api.post('/messages', { content });
+  return api.post('/api/messages', { content });
 };
 
-export const blockMessage = (messageId) => {
-  return api.put(`/messages/${messageId}/block`);
+export const uploadFile = (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  return api.post('/api/messages/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
 
+// User Profile
+export const getUserProfile = () => {
+  return api.get('/api/users/profile');
+};
+
+export const updateUserProfile = (userData) => {
+  return api.put('/api/users/profile', userData);
+};
+
+// Groups
+export const getGroups = () => {
+  return api.get('/api/groups');
+};
+
+export const getStudentGroups = () => {
+  return api.get('/api/groups/student');
+};
+
+export const getTeacherGroups = () => {
+  return api.get('/api/groups');
+};
+
+export const getGroupById = (id) => {
+  if (!id || id === 'undefined') {
+    return Promise.reject(new Error('Invalid group ID'));
+  }
+  return api.get(`/api/groups/${id}`);
+};
+
+export const createGroup = (groupData) => {
+  return api.post('/api/groups', groupData);
+};
+
+export const updateGroup = (id, groupData) => {
+  return api.put(`/api/groups/${id}`, groupData);
+};
+
+export const deleteGroup = (id) => {
+  // Проверка валидности аргумента
+  if (!id || id === 'undefined') {
+    return Promise.reject(new Error('Invalid group ID'));
+  }
+  
+  return api.delete(`/api/groups/${id}`)
+    .catch(error => {
+      console.error('Error in deleteGroup:', error);
+      throw error;
+    });
+};
+
+// Group Students
+export const addStudentToGroup = (groupId, studentId) => {
+  // Проверка валидности аргументов
+  if (!groupId || !studentId) {
+    return Promise.reject(new Error('Invalid group ID or student ID'));
+  }
+  
+  return api.post(`/api/groups/${groupId}/students`, { studentId })
+    .catch(error => {
+      console.error('Error in addStudentToGroup:', error);
+      throw error;
+    });
+};
+
+export const removeStudentFromGroup = (groupId, studentId) => {
+  // Проверка валидности аргументов
+  if (!groupId || !studentId) {
+    return Promise.reject(new Error('Invalid group ID or student ID'));
+  }
+  
+  return api.delete(`/api/groups/${groupId}/students/${studentId}`)
+    .catch(error => {
+      console.error('Error in removeStudentFromGroup:', error);
+      throw error;
+    });
+};
+
+export const getAvailableStudents = () => {
+  return api.get('/api/users/students/available');
+};
+
+// Assignments
+export const createAssignment = (groupId, assignmentData) => {
+  const formData = new FormData();
+  
+  // Add assignment details to form data
+  formData.append('title', assignmentData.title);
+  formData.append('description', assignmentData.description);
+  formData.append('deadline', assignmentData.deadline);
+  
+  // Add attachment files if any
+  if (assignmentData.attachments && assignmentData.attachments.length > 0) {
+    assignmentData.attachments.forEach((file, index) => {
+      formData.append('attachments', file);
+    });
+  }
+  
+  return api.post(`/api/groups/${groupId}/assignments`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+export const getGroupAssignments = (groupId) => {
+  return api.get(`/api/groups/${groupId}/assignments`);
+};
+
+// Tests
+export const createTest = async (groupId, testData) => {
+  try {
+    const response = await api.post(`/api/groups/${groupId}/tests`, testData);
+    return response;
+  } catch (error) {
+    console.error('Error creating test:', error);
+    throw error;
+  }
+};
+
+export const getTestById = async (groupId, testId) => {
+  try {
+    const response = await api.get(`/api/groups/${groupId}/tests/${testId}`);
+    return response;
+  } catch (error) {
+    console.error('Error fetching test:', error);
+    throw error;
+  }
+};
+
+export const updateTest = async (groupId, testId, testData) => {
+  try {
+    const response = await api.put(`/api/groups/${groupId}/tests/${testId}`, testData);
+    return response;
+  } catch (error) {
+    console.error('Error updating test:', error);
+    throw error;
+  }
+};
+
+export const getAllTests = async (groupId) => {
+  if (!groupId || groupId === 'undefined') {
+    return Promise.reject(new Error('Invalid group ID'));
+  }
+  try {
+    const response = await api.get(`/api/groups/${groupId}/tests`);
+    return response;
+  } catch (error) {
+    console.error('Error fetching tests:', error);
+    throw error;
+  }
+};
+
+export const deleteTest = async (groupId, testId) => {
+  try {
+    const response = await api.delete(`/api/groups/${groupId}/tests/${testId}`);
+    return response;
+  } catch (error) {
+    console.error('Error deleting test:', error);
+    throw error;
+  }
+};
+
+export const submitTestAnswers = async (groupId, testId, answers, timeSpent) => {
+  console.log('Отправка результатов теста:', {
+    groupId,
+    testId,
+    answersCount: answers.length,
+    timeSpent
+  });
+  
+  // Настройки для повторных попыток
+  const maxRetries = 3;
+  let retryCount = 0;
+  let lastError = null;
+  
+  // Функция для форматирования ответов
+  // Убеждаемся, что ID вопросов и ответов - строки и все поля присутствуют
+  const formatAnswers = (answersArray) => {
+    return answersArray.map(answer => ({
+      questionId: String(answer.questionId),
+      optionId: String(answer.optionId)
+    }));
+  };
+  
+  // Функция для создания запроса
+  const makeRequest = async () => {
+    try {
+      // Форматируем ответы для повышения надежности
+      const formattedAnswers = formatAnswers(answers);
+      
+      // Добавляем опции для повышения надежности запроса
+      const response = await api.post(`/api/groups/${groupId}/tests/${testId}/submit`, 
+        { answers: formattedAnswers, timeSpent }, 
+        { 
+          // Увеличиваем таймаут для больших тестов
+          timeout: 30000,
+          // Отключаем кэширование для этого запроса
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      console.log('Ответ сервера на отправку теста:', response.data);
+      return response;
+    } catch (error) {
+      lastError = error;
+      console.error(`Попытка ${retryCount + 1}/${maxRetries} не удалась:`, error);
+      
+      // Подробное логирование ошибки для диагностики
+      if (error.response) {
+        console.error('Ответ сервера с ошибкой:', {
+          status: error.response.status,
+          data: error.response.data
+        });
+      } else if (error.request) {
+        // Ошибка сети - нет ответа от сервера
+        console.error('Нет ответа от сервера:', {
+          requestUrl: error.request.responseURL,
+          requestMethod: error.config?.method
+        });
+      }
+      
+      // Увеличиваем счетчик попыток
+      retryCount++;
+      
+      // Если достигли максимального числа попыток, пробуем использовать fetch API
+      if (retryCount >= maxRetries) {
+        console.log('Попытка использования fetch API для финальной отправки...');
+        try {
+          // Форматируем ответы здесь снова, чтобы избежать ссылки на переменную из другой области видимости
+          const answersForFetch = formatAnswers(answers);
+          
+          const fetchResponse = await fetch(`${API_URL}/api/groups/${groupId}/tests/${testId}/submit`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              'Cache-Control': 'no-cache',
+              'Pragma': 'no-cache'
+            },
+            body: JSON.stringify({ answers: answersForFetch, timeSpent }),
+            credentials: 'include'
+          });
+          
+          if (fetchResponse.ok) {
+            const data = await fetchResponse.json();
+            console.log('Успешная отправка через fetch API:', data);
+            return { data };
+          } else {
+            console.error('Fetch API вернул ошибку:', fetchResponse.status);
+            const errorText = await fetchResponse.text();
+            console.error('Текст ошибки:', errorText);
+            throw new Error(`Ошибка отправки: ${fetchResponse.status} ${errorText}`);
+          }
+        } catch (fetchError) {
+          console.error('Ошибка при использовании fetch API:', fetchError);
+          throw fetchError;
+        }
+      }
+      
+      // Если не достигли максимума попыток, пауза перед следующей попыткой
+      const delay = Math.pow(2, retryCount) * 1000; // Экспоненциальная задержка
+      console.log(`Ожидание ${delay}мс перед следующей попыткой...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      
+      // Пробуем снова
+      return makeRequest();
+    }
+  };
+  
+  return makeRequest();
+};
+
+export const getTestResults = async (groupId, testId) => {
+  try {
+    const response = await api.get(`/api/groups/${groupId}/tests/${testId}/results`);
+    return response;
+  } catch (error) {
+    console.error('Error fetching test results:', error);
+    throw error;
+  }
+};
+
+// Materials
+export const getAllMaterials = async (groupId) => {
+  if (!groupId || groupId === 'undefined') {
+    return Promise.reject(new Error('Invalid group ID'));
+  }
+  try {
+    const response = await api.get(`/api/groups/${groupId}/materials`);
+    return response;
+  } catch (error) {
+    console.error('Error fetching materials:', error);
+    throw error;
+  }
+};
+
+export const getMaterialById = async (groupId, materialId) => {
+  try {
+    const response = await api.get(`/api/groups/${groupId}/materials/${materialId}`);
+    return response;
+  } catch (error) {
+    console.error('Error fetching material:', error);
+    throw error;
+  }
+};
+
+export const createMaterial = async (groupId, materialData) => {
+  try {
+    const formData = new FormData();
+    
+    // Add basic fields
+    formData.append('title', materialData.title || '');
+    formData.append('content', materialData.content || '');
+    
+    // Serialize code blocks to JSON string
+    if (materialData.codeBlocks && materialData.codeBlocks.length > 0) {
+      formData.append('codeBlocks', JSON.stringify(materialData.codeBlocks));
+    }
+    
+    // Add video URL if exists
+    if (materialData.videoUrl) {
+      formData.append('videoUrl', materialData.videoUrl);
+    }
+    
+    // Add video file if exists - Multer expects the raw File object
+    if (materialData.videoFile) {
+      formData.append('videoFile', materialData.videoFile);
+    }
+    
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      timeout: 180000, // 3 minute timeout
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        console.log(`Upload progress: ${percentCompleted}%`);
+      }
+    };
+    
+    const response = await api.post(`/api/groups/${groupId}/materials`, formData, config);
+    return response;
+  } catch (error) {
+    console.error('Error creating material:', error);
+    throw error;
+  }
+};
+
+export const updateMaterial = async (groupId, materialId, materialData) => {
+  try {
+    const formData = new FormData();
+    
+    // Add basic fields
+    formData.append('title', materialData.title || '');
+    formData.append('content', materialData.content || '');
+    
+    // Serialize code blocks to JSON string
+    if (materialData.codeBlocks && materialData.codeBlocks.length > 0) {
+      formData.append('codeBlocks', JSON.stringify(materialData.codeBlocks));
+    }
+    
+    // Add video URL if exists
+    if (materialData.videoUrl) {
+      formData.append('videoUrl', materialData.videoUrl);
+    }
+    
+    // Add video file if exists - Multer expects the raw File object
+    if (materialData.videoFile) {
+      formData.append('videoFile', materialData.videoFile);
+    }
+    
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      timeout: 180000, // 3 minute timeout
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        console.log(`Upload progress: ${percentCompleted}%`);
+      }
+    };
+    
+    const response = await api.put(`/api/groups/${groupId}/materials/${materialId}`, formData, config);
+    return response;
+  } catch (error) {
+    console.error('Error updating material:', error);
+    throw error;
+  }
+};
+
+export const deleteMaterial = async (groupId, materialId) => {
+  try {
+    const response = await api.delete(`/api/groups/${groupId}/materials/${materialId}`);
+    return response;
+  } catch (error) {
+    console.error('Error deleting material:', error);
+    throw error;
+  }
+};
+
+export const markMaterialAsViewed = async (groupId, materialId) => {
+  try {
+    const response = await api.post(`/api/groups/${groupId}/materials/${materialId}/view`);
+    return response;
+  } catch (error) {
+    console.error('Error marking material as viewed:', error);
+    throw error;
+  }
+};
+
+export const getMaterialProgress = async (groupId, materialId) => {
+  try {
+    console.log(`Fetching progress for material: ${materialId} in group: ${groupId}`);
+    const response = await api.get(`/api/groups/${groupId}/materials/${materialId}/progress`);
+    console.log('Progress API response:', response);
+    return response;
+  } catch (error) {
+    console.error('Error getting material progress:', error);
+    console.error('Error details:', error.response ? {
+      status: error.response.status,
+      data: error.response.data
+    } : 'No response data');
+    throw error;
+  }
+};
+
+export const getAllMaterialsProgress = async (groupId) => {
+  try {
+    const response = await api.get(`/api/groups/${groupId}/materials/progress`);
+    return response;
+  } catch (error) {
+    console.error('Error getting all materials progress:', error);
+    throw error;
+  }
+};
+
+// Export default api for other custom requests
 export default api;

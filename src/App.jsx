@@ -1,82 +1,84 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import useAuth from './hooks/useAuth';
-import Header from './components/layout/Header';
+import { SocketProvider } from './context/SocketContext';
+import { ChatProvider } from './context/ChatContext';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import RoleBasedRoute from './components/auth/RoleBasedRoute';
+import MainLayout from './layouts/MainLayout';
 import Login from './components/auth/Login';
-import StudentRegister from './components/auth/StudentRegister';
-import TeacherRegister from './components/auth/TeacherRegister';
-import ForgotPassword from './components/auth/ForgotPassword';
-import StudentDashboard from './components/dashboard/StudentDashboard';
+import Register from './components/auth/StudentRegister';
+import TeacherRegistration from './components/auth/TeacherRegister';
+// import Landing from './pages/Landing';
 import TeacherDashboard from './components/dashboard/TeacherDashboard';
+import StudentDashboard from './components/dashboard/StudentDashboard';
+import GroupDetails from './components/group/GroupDetails';
+import CreateGroup from './components/group/CreateGroup';
+import StudentGroups from './components/group/StudentGroups';
+
+import GroupsList from './components/group/GroupsList';
+import CreateTest from './components/tests/CreateTest';
+import TestList from './components/tests/TestList';
+import TakeTest from './components/tests/TakeTest';
+import TestResults from './components/tests/TestResults';
+import TeacherTestResults from './components/tests/TeacherTestResults';
+import ChatPage from './pages/ChatPage';
+import NotFound from './pages/NotFound';
+import MaterialsList from './components/materials/MaterialsList';
+import CreateMaterial from './components/materials/CreateMaterial';
+import MaterialView from './components/materials/MaterialView';
+import MaterialProgress from './components/materials/MaterialProgress';
+// import './i18n';
 import './App.scss';
-
-// Protected route component
-const ProtectedRoute = ({ children, roleRequired }) => {
-  const { user, loading, isAuthenticated } = useAuth();
-  
-  if (loading) {
-    return <div className="loading-screen">Loading...</div>;
-  }
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
-  }
-  
-  if (roleRequired && user.role !== roleRequired) {
-    return <Navigate to={`/dashboard/${user.role}`} />;
-  }
-  
-  return children;
-};
-
-// App wrapper to use auth context
-const AppWithAuth = () => {
-  return (
-    <>
-      <Header />
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register/student" element={<StudentRegister />} />
-          <Route path="/register/teacher" element={<TeacherRegister />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          
-          <Route 
-            path="/dashboard/student" 
-            element={
-              <ProtectedRoute roleRequired="student">
-                <StudentDashboard />
-              </ProtectedRoute>
-            } 
-          />
-          
-          <Route 
-            path="/dashboard/teacher" 
-            element={
-              <ProtectedRoute roleRequired="teacher">
-                <TeacherDashboard />
-              </ProtectedRoute>
-            } 
-          />
-          
-          {/* Add other routes here */}
-          
-          {/* Catch-all route */}
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      </main>
-    </>
-  );
-};
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <AuthProvider>
-        <AppWithAuth />
+        <SocketProvider>
+          <ChatProvider>
+            <Routes>
+              {/* <Route path="/" element={<Landing />} /> */}
+              <Route path="/" element={<Login />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register/student" element={<Register />} />
+              <Route path="/register/teacher" element={<TeacherRegistration />} />
+              
+              <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
+                <Route path="/dashboard/teacher" element={<RoleBasedRoute allowedRoles={['teacher']}><TeacherDashboard /></RoleBasedRoute>} />
+                <Route path="/dashboard/student" element={<RoleBasedRoute allowedRoles={['student']}><StudentDashboard /></RoleBasedRoute>} />
+                <Route path="/dashboard" element={<Navigate to="/dashboard/student" replace />} />
+                
+                <Route path="/my-groups" element={<RoleBasedRoute allowedRoles={['student']}><StudentGroups /></RoleBasedRoute>} />
+                <Route path="/groups/create" element={<RoleBasedRoute allowedRoles={['teacher']}><CreateGroup /></RoleBasedRoute>} />
+                <Route path="/groups/:id" element={<GroupDetails />} />
+                <Route path="/student/group/:id" element={<GroupDetails />} />
+                <Route path="/all-groups" element={<RoleBasedRoute allowedRoles={['teacher']}><GroupsList /></RoleBasedRoute>} />
+                
+                {/* Маршруты для тестов */}
+                <Route path="/groups/:groupId/tests" element={<TestList />} />
+                <Route path="/groups/:groupId/tests/create" element={<RoleBasedRoute allowedRoles={['teacher']}><CreateTest /></RoleBasedRoute>} />
+                <Route path="/groups/:groupId/tests/:testId/take" element={<RoleBasedRoute allowedRoles={['student']}><TakeTest /></RoleBasedRoute>} />
+                <Route path="/groups/:groupId/tests/:testId/results" element={<RoleBasedRoute allowedRoles={['teacher']}><TeacherTestResults /></RoleBasedRoute>} />
+                <Route path="/groups/:groupId/tests/:testId/result" element={<RoleBasedRoute allowedRoles={['student']}><TestResults /></RoleBasedRoute>} />
+                <Route path="/groups/:groupId/tests/:testId/edit" element={<RoleBasedRoute allowedRoles={['teacher']}><CreateTest /></RoleBasedRoute>} />
+                
+                {/* Маршруты для материалов */}
+                <Route path="/groups/:groupId/materials" element={<MaterialsList />} />
+                <Route path="/groups/:groupId/materials/create" element={<RoleBasedRoute allowedRoles={['teacher']}><CreateMaterial /></RoleBasedRoute>} />
+                <Route path="/groups/:groupId/materials/:materialId" element={<MaterialView />} />
+                <Route path="/groups/:groupId/materials/:materialId/edit" element={<RoleBasedRoute allowedRoles={['teacher']}><CreateMaterial /></RoleBasedRoute>} />
+                <Route path="/groups/:groupId/materials/:materialId/progress" element={<RoleBasedRoute allowedRoles={['teacher']}><MaterialProgress /></RoleBasedRoute>} />
+                
+                <Route path="/chat" element={<ChatPage />} />
+                <Route path="/chat/:recipientId" element={<ChatPage />} />
+              </Route>
+              
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </ChatProvider>
+        </SocketProvider>
       </AuthProvider>
-    </Router>
+    </BrowserRouter>
   );
 }
 

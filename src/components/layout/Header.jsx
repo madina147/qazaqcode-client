@@ -62,7 +62,7 @@ const Header = () => {
                 </li>
                 <li>
                   <Link 
-                    to="/groups" 
+                    to="/all-groups" 
                     onClick={closeMenu}
                     className={window.location.pathname.includes('/groups') ? 'active' : ''}
                   >
@@ -71,11 +71,11 @@ const Header = () => {
                 </li>
                 <li>
                   <Link 
-                    to="/lessons" 
+                    to="/tasks" 
                     onClick={closeMenu}
-                    className={window.location.pathname.includes('/lessons') ? 'active' : ''}
+                    className={window.location.pathname.includes('/tasks') ? 'active' : ''}
                   >
-                    Есептер
+                    Тапсырмалар
                   </Link>
                 </li>
                 <li>

@@ -234,16 +234,23 @@ const StudentDashboard = () => {
           <div className="groups-section">
             <h2>Менің топтарым</h2>
             {groups.length > 0 ? (
-              <div className="groups-list">
-                {groups.map((group) => (
-                  <Link to={`/groups/${group._id}`} key={group._id} className="group-card">
-                    <h3>{group.name}</h3>
-                    <p className="group-teacher">
-                      Мұғалім: {group.teacher?.firstName} {group.teacher?.lastName}
-                    </p>
+              <>
+                <div className="groups-list">
+                  {groups.slice(0, 2).map((group) => (
+                    <Link to={`/groups/${group._id}`} key={group._id} className="group-card">
+                      <h3>{group.name}</h3>
+                      <p className="group-teacher">
+                        Мұғалім: {group.teacher?.firstName} {group.teacher?.lastName}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+                {groups.length > 2 && (
+                  <Link to="/my-groups" className="see-all-groups"><i className="fas fa-arrow-right"></i> 
+                    Барлық топтарды көру ({groups.length})
                   </Link>
-                ))}
-              </div>
+                )}
+              </>
             ) : (
               <p className="empty-message">
                 Сіз ешқандай топта жоқсыз. Мұғалім сізді топқа қосуы керек.

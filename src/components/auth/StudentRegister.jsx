@@ -40,17 +40,17 @@ const StudentRegister = () => {
       !formData.login || 
       !formData.password
     ) {
-      setError('Пожалуйста, заполните все обязательные поля');
+      setError('Барлық міндетті өрістерді толтырыңыз');
       return;
     }
     
     if (formData.password !== formData.confirmPassword) {
-      setError('Пароли не совпадают');
+      setError('Парольдер сәйкес келмейді');
       return;
     }
     
     if (formData.password.length < 6) {
-      setError('Пароль должен содержать не менее 6 символов');
+      setError('Пароль кемінде 6 символдан тұруы керек');
       return;
     }
     
@@ -73,48 +73,48 @@ const StudentRegister = () => {
     <div className="auth-container">
       <div className="auth-form-container">
         <h2>QazaqCode</h2>
-        <h3>Регистрация ученика</h3>
+        <h3>Оқушының тіркелуі</h3>
         {error && <div className="auth-error">{error}</div>}
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="lastName">Фамилия*</label>
+            <label htmlFor="lastName">Тегі*</label>
             <input
               type="text"
               id="lastName"
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
-              placeholder="Введите фамилию"
+              placeholder="Тегіңізді енгізіңіз"
               required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="firstName">Имя*</label>
+            <label htmlFor="firstName">Аты*</label>
             <input
               type="text"
               id="firstName"
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
-              placeholder="Введите имя"
+              placeholder="Атыңызды енгізіңіз"
               required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="middleName">Отчество</label>
+            <label htmlFor="middleName">Әкесінің аты</label>
             <input
               type="text"
               id="middleName"
               name="middleName"
               value={formData.middleName}
               onChange={handleChange}
-              placeholder="Введите отчество (если есть)"
+              placeholder="Әкесінің атын енгізіңіз (егер бар болса)"
             />
           </div>
           
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="grade">Класс*</label>
+              <label htmlFor="grade">Сынып*</label>
               <select
                 id="grade"
                 name="grade"
@@ -130,7 +130,7 @@ const StudentRegister = () => {
               </select>
             </div>
             <div className="form-group">
-              <label htmlFor="gradeLetter">Буква класса*</label>
+              <label htmlFor="gradeLetter">Сыныптың әрпі*</label>
               <select
                 id="gradeLetter"
                 name="gradeLetter"
@@ -155,7 +155,7 @@ const StudentRegister = () => {
               name="login"
               value={formData.login}
               onChange={handleChange}
-              placeholder="Создайте логин"
+              placeholder="Логин жасаңыз"
               required
             />
           </div>
@@ -167,19 +167,19 @@ const StudentRegister = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Создайте пароль"
+              placeholder="Пароль жасаңыз"
               required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="confirmPassword">Подтверждение пароля*</label>
+            <label htmlFor="confirmPassword">Парольді растау*</label>
             <input
               type="password"
               id="confirmPassword"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              placeholder="Подтвердите пароль"
+              placeholder="Парольді растаңыз"
               required
             />
           </div>
@@ -188,11 +188,11 @@ const StudentRegister = () => {
             className="auth-button" 
             disabled={loading}
           >
-            {loading ? 'Регистрация...' : 'Зарегистрироваться'}
+            {loading ? 'Тіркелу...' : 'Тіркелу'}
           </button>
         </form>
         <div className="auth-links">
-          <p>Уже есть аккаунт? <Link to="/login">Войти</Link></p>
+          <p style={{color: 'gray'}}>Есептік жазбаңыз бар ма? <Link to="/login">Кіру</Link></p>
         </div>
       </div>
     </div>

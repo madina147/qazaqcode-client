@@ -1,0 +1,424 @@
+// Python-focused Chat Styles
+// This file contains additional styles for the enhanced chat functionality
+
+// Python learning tips section
+.python-learning-tips {
+  background: rgba(0, 121, 107, 0.05);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-left: 3px solid #00796b;
+  
+  &.collapsed {
+    max-height: 120px;
+    overflow: hidden;
+  }
+  
+  h2 {
+    font-size: 14px;
+    color: #00796b;
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+  
+  .tip-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    
+    .tip {
+      flex: 1;
+      min-width: 100px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 6px;
+      padding: 8px;
+      
+      h3 {
+        font-size: 12px;
+        color: #00796b;
+        margin-top: 0;
+        margin-bottom: 5px;
+      }
+      
+      p {
+        font-size: 12px;
+        color: #555;
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Tips toggle button
+.tips-toggle-button {
+  background: rgba(0, 121, 107, 0.1);
+  color: #00796b;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  
+  &:hover {
+    background: rgba(0, 121, 107, 0.2);
+  }
+}
+
+// Chat messages container
+.chat-messages-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 210px);
+  overflow: hidden;
+}
+
+// Chat messages area
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  height: 100%;
+  
+  &.expanded {
+    height: calc(100vh - 180px);
+  }
+}
+
+// File attachment styles
+.file-message {
+  background: rgba(33, 150, 243, 0.1) !important;
+  border-color: rgba(33, 150, 243, 0.2) !important;
+  
+  .file-attachment {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    
+    .file-link {
+      display: flex;
+      align-items: center;
+      color: #1976d2;
+      text-decoration: none;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.95);
+      }
+      
+      .file-icon {
+        margin-right: 8px;
+        font-size: 20px;
+      }
+      
+      .file-name {
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+    
+    .download-button {
+      padding: 8px 12px;
+      background: #2196f3;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      
+      &:hover {
+        background: #1976d2;
+      }
+    }
+  }
+}
+
+// Code formatting styles
+.message-content {
+  .message-text {
+    margin: 0 0 10px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  // Code block styling
+  .code-block {
+    background: #272822; // Monokai-inspired
+    color: #f8f8f2;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    
+    code {
+      font-family: inherit;
+    }
+    
+    &::-webkit-scrollbar {
+      height: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+  
+  // Inline code styling
+  .inline-code {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #e91e63;
+  }
+  
+  // Question format styling
+  .question-format {
+    color: #673ab7;
+    background: rgba(103, 58, 183, 0.1);
+    padding: 5px 10px;
+    border-radius: 8px;
+    border-left: 3px solid #673ab7;
+    display: block;
+    font-weight: 500;
+  }
+  
+  strong {
+    font-weight: 600;
+    color: #00796b;
+  }
+  
+  em {
+    color: #0288d1;
+  }
+}
+
+// Text formatting toolbar
+.format-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  position: relative;
+  
+  .format-toggle-button {
+    background: none;
+    border: none;
+    color: #00796b;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba(0, 121, 107, 0.1);
+    }
+    
+    .format-icon {
+      font-weight: bold;
+    }
+  }
+  
+  .file-input {
+    display: none;
+  }
+  
+  .file-upload-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: rgba(33, 150, 243, 0.1);
+    color: #2196f3;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    
+    &:hover {
+      background: rgba(33, 150, 243, 0.2);
+    }
+    
+    &:before {
+      content: '📎';
+      margin-right: 5px;
+    }
+    
+    &[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+  
+  .format-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    
+    button {
+      background: none;
+      border: none;
+      padding: 8px 12px;
+      text-align: left;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      
+      &:hover {
+        background: rgba(0, 0, 0, 0.05);
+      }
+      
+      strong {
+        color: #00796b;
+      }
+      
+      em {
+        color: #0288d1;
+      }
+      
+      code {
+        background: rgba(0, 0, 0, 0.05);
+        padding: 2px 5px;
+        border-radius: 4px;
+        font-family: monospace;
+      }
+      
+      .question-icon {
+        color: #673ab7;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+// Chat input container with formatting options
+.chat-input-container {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 15px 20px;
+}
+
+// Mobile responsiveness for chat enhancements
+@media (max-width: 768px) {
+  .python-learning-tips .tip-grid {
+    flex-direction: column;
+  }
+  
+  .format-menu {
+    width: calc(100vw - 40px);
+    left: -10px;
+  }
+  
+  .tips-toggle-button {
+    top: 15px;
+    right: 15px;
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+}
+
+// Message type variations
+.file-message {
+  background: rgba(33, 150, 243, 0.1) !important;
+  border-color: rgba(33, 150, 243, 0.2) !important;
+  
+  // ... existing file message styles ...
+}
+
+.question-message {
+  background: rgba(103, 58, 183, 0.08) !important;
+  border-color: rgba(103, 58, 183, 0.2) !important;
+  border-left: 3px solid #673ab7 !important;
+}
+
+// Message header extensions
+.message-header {
+  // ... existing styles are in ChatPage.scss ...
+  
+  .message-type-badge {
+    background: #673ab7;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    
+    &:before {
+      content: '❓';
+      margin-right: 3px;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.temp-message {
+  opacity: 0.8;
+  position: relative;
+  
+  .message-pending {
+    color: #ff9800;
+    font-size: 11px;
+    margin-left: auto;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    
+    &:before {
+      content: "⏳";
+      margin-right: 4px;
+      font-size: 12px;
+    }
+  }
+  
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(to right, #ff9800, transparent);
+    animation: loading 1.5s infinite;
+    width: 100%;
+  }
+}
+
+@keyframes loading {
+  0% { width: 0; opacity: 1; }
+  50% { width: 50%; opacity: 0.5; }
+  100% { width: 100%; opacity: 0; }
+} 

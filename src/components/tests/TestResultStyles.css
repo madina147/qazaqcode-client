@@ -1,0 +1,187 @@
+/* Стили для вариантов ответов в тестах */
+.option-result {
+  padding: 1.2rem;
+  margin: 0.8rem 0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border-width: 2px;
+}
+
+.option-result:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.option-result .option-text {
+  flex: 1;
+  line-height: 1.5;
+}
+
+.option-result .option-indicator {
+  margin-left: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.option-result .option-indicator .check-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: rgba(56, 178, 172, 0.2);
+  border-radius: 50%;
+  color: #38b2ac;
+  font-size: 1.4rem;
+  font-weight: 700;
+  box-shadow: 0 4px 8px rgba(56, 178, 172, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.option-result .option-indicator .check-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(56, 178, 172, 0.35);
+}
+
+.option-result .option-indicator .cross-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: rgba(229, 62, 62, 0.2);
+  border-radius: 50%;
+  color: #e53e3e;
+  font-size: 1.4rem;
+  font-weight: 700;
+  box-shadow: 0 4px 8px rgba(229, 62, 62, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.option-result .option-indicator .cross-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(229, 62, 62, 0.35);
+}
+
+.option-result .option-correct-hint {
+  display: flex;
+  align-items: center;
+  margin-left: 1.2rem;
+  color: #38b2ac;
+  font-style: italic;
+  font-size: 0.95rem;
+}
+
+.option-result .option-correct-hint:before {
+  content: "✓";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: rgba(56, 178, 172, 0.15);
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  font-weight: 600;
+  color: #38b2ac;
+}
+
+/* Стили для правильно выбранного ответа */
+.option-result.correct-selected {
+  background-color: rgba(56, 178, 172, 0.1);
+  border: 2px solid #38b2ac !important;
+  box-shadow: 0 4px 12px rgba(56, 178, 172, 0.15);
+}
+
+.option-result.correct-selected:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 100%;
+  background-color: #38b2ac;
+  opacity: 0.5;
+}
+
+.option-result.correct-selected .option-text {
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.option-result.correct-selected .option-indicator .check-icon {
+  background-color: rgba(56, 178, 172, 0.25);
+  color: #38b2ac;
+  box-shadow: 0 4px 10px rgba(56, 178, 172, 0.3);
+  transform: scale(1.05);
+}
+
+/* Стили для неправильно выбранного ответа */
+.option-result.incorrect-selected {
+  background-color: rgba(229, 62, 62, 0.1);
+  border: 2px solid #e53e3e !important;
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.15);
+}
+
+.option-result.incorrect-selected:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 100%;
+  background-color: #e53e3e;
+  opacity: 0.5;
+}
+
+.option-result.incorrect-selected .option-text {
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.option-result.incorrect-selected .option-indicator .cross-icon {
+  background-color: rgba(229, 62, 62, 0.25);
+  color: #e53e3e;
+  box-shadow: 0 4px 10px rgba(229, 62, 62, 0.3);
+  transform: scale(1.05);
+}
+
+/* Стили для невыбранного правильного ответа */
+.option-result.correct-option {
+  background-color: rgba(56, 178, 172, 0.05);
+  border: 2px dashed #38b2ac;
+}
+
+/* Стили для обычного варианта */
+.option-result.regular-option {
+  background-color: #f8fafc;
+  border: 2px solid #edf2f7;
+}
+
+/* Выделение для всех выбранных вариантов */
+.option-result.selected {
+  font-weight: 500;
+}
+
+/* Специальные стили для вопросов с правильным ответом */
+.question-result.correct .option-result.incorrect-selected {
+  /* Если в правильном вопросе выбран неправильный ответ, делаем рамку менее выраженной */
+  border: 2px solid rgba(229, 62, 62, 0.7) !important;
+}
+
+.question-result.correct .option-result.incorrect-selected:after {
+  opacity: 0.3;
+}
+
+/* Специальные стили для вопросов с неправильным ответом */
+.question-result.incorrect .option-result.correct-option {
+  /* Более выраженно показываем правильный ответ в неправильно отвеченном вопросе */
+  border: 2px solid #38b2ac;
+  background-color: rgba(56, 178, 172, 0.1);
+} 

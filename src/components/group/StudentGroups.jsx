@@ -1,0 +1,93 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { getStudentGroups } from '../../services/api';
+import './GroupStyles.scss';
+
+const StudentGroups = () => {
+  const [groups, setGroups] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        setLoading(true);
+        const response = await getStudentGroups();
+        setGroups(response.data);
+      } catch (err) {
+        console.error('Error fetching student groups:', err);
+        setError('Топтар тізімін жүктеу кезінде қате орын алды');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGroups();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Топтар жүктелуде...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <p className="error-message">{error}</p>
+        <button onClick={() => window.location.reload()} className="retry-button">
+          Қайталап көру
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="student-groups-container">
+      <div className="page-header">
+        <h1 className="page-title">Менің барлық топтарым</h1>
+        <Link to="/dashboard/student" className="back-button">
+          <i className="fas fa-arrow-left"></i> Профильге оралу
+        </Link>
+      </div>
+
+      {groups.length === 0 ? (
+        <div className="empty-state">
+          <i className="fas fa-users empty-icon"></i>
+          <h2>Топтар табылмады</h2>
+          <p>Сіз әлі бірде-бір топта жоқсыз. Мұғалім сізді топқа қосуы керек.</p>
+        </div>
+      ) : (
+        <div className="groups-grid">
+          {groups.map((group) => (
+            <Link to={`/student/group/${group._id}`} key={group._id} className="group-card">
+              <div className="card-content">
+                <h3 className="group-name">{group.name}</h3>
+                <div className="group-info">
+                  <div className="teacher-info">
+                    <i className="fas fa-chalkboard-teacher info-icon"></i>
+                    <span>Мұғалім: {group.teacher?.firstName} {group.teacher?.lastName}</span>
+                  </div>
+                  <div className="students-info">
+                    <i className="fas fa-user-friends info-icon"></i>
+                    <span>Оқушылар: {group.studentCount || 0}</span>
+                  </div>
+                </div>
+                <div className="card-footer">
+                  <span className="view-details">
+                    <i className="fas fa-arrow-right"></i> Толығырақ
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default StudentGroups;
