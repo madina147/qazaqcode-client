@@ -5,7 +5,7 @@ import { getMessages } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 // API URL for uploads
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://34.34.73.209/api';
 
 const ChatContext = createContext();
 
@@ -23,7 +23,7 @@ export const ChatProvider = ({ children }) => {
     if (!token) return;
 
     // Connect to the server
-    const newSocket = io(import.meta.env.VITE_API_URL || 'http://localhost:5000', {
+    const newSocket = io(import.meta.env.VITE_API_URL || 'https://34.34.73.209', {
       auth: {
         token
       }
@@ -80,7 +80,7 @@ export const ChatProvider = ({ children }) => {
     setError(null);
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/messages`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://34.34.73.209'}/api/messages`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -155,7 +155,7 @@ export const ChatProvider = ({ children }) => {
       // Add to local state immediately
       setMessages(prevMessages => [...prevMessages, tempFileMessage]);
       
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/messages/upload`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://34.34.73.209'}/api/messages/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

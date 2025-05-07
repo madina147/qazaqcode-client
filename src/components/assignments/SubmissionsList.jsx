@@ -20,7 +20,7 @@ const SubmissionsList = () => {
   const [evaluating, setEvaluating] = useState(false);
   const [activeTab, setActiveTab] = useState('solution'); // 'solution', 'ai', 'teacher'
   const [useAIScore, setUseAIScore] = useState(true);
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://34.34.73.209';
 
   useEffect(() => {
     const fetchData = async () => {

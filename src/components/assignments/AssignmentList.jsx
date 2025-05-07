@@ -9,7 +9,7 @@ import './AssignmentModules.scss';
 const fetchAssignmentsDirectly = async (groupId) => {
   console.log('Emergency direct API call for assignments');
   try {
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const API_URL = import.meta.env.VITE_API_URL || 'https://34.34.73.209';
     const response = await axios.get(`${API_URL}/api/groups/${groupId}/assignments-public`);
     
     if (response.data && response.data.assignments) {
@@ -26,7 +26,7 @@ const fetchAssignmentsDirectly = async (groupId) => {
 const fetchGroupDirectly = async (groupId) => {
   console.log('Emergency direct API call for group info');
   try {
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const API_URL = import.meta.env.VITE_API_URL || 'https://34.34.73.209';
     const response = await axios.get(`${API_URL}/api/groups/${groupId}`);
     
     if (response.data) {

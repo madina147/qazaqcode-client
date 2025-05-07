@@ -14,7 +14,7 @@ export const SocketProvider = ({ children }) => {
     if (!token) return;
 
     // Create socket connection
-    const socketInstance = io(import.meta.env.VITE_API_URL || 'http://localhost:5000', {
+    const socketInstance = io(import.meta.env.VITE_API_URL || 'https://34.34.73.209', {
       auth: {
         token
       }
