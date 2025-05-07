@@ -62,8 +62,8 @@ const MaterialProgress = () => {
       // Возвращаем базовую информацию, если не нашли студента
       return {
         _id: viewedUserId,
-        firstName: 'Неизвестный',
-        lastName: 'Студент',
+        firstName: 'Белгісіз',
+        lastName: 'Оқушы',
         viewedAt: view.viewedAt
       };
     });
@@ -241,7 +241,7 @@ const MaterialProgress = () => {
               <div className="interactive-chart">
                 <div className="chart-data">
                   <div className="chart-percentage" style={{color: "#00796b"}}>{progressPercentage}<span>%</span></div>
-                  <div className="chart-label">студенттер қарады</div>
+                  <div className="chart-label">оқушылар қарады</div>
                 </div>
                 
                 <div className="donut-chart-wrapper">

@@ -27,6 +27,13 @@ import MaterialsList from './components/materials/MaterialsList';
 import CreateMaterial from './components/materials/CreateMaterial';
 import MaterialView from './components/materials/MaterialView';
 import MaterialProgress from './components/materials/MaterialProgress';
+import AssignmentList from './components/assignments/AssignmentList';
+import CreateAssignment from './components/assignments/CreateAssignment';
+import AssignmentDetail from './components/assignments/AssignmentDetail';
+import SubmitSolution from './components/assignments/SubmitSolution';
+import SubmissionsList from './components/assignments/SubmissionsList';
+import Calendar from './components/calendar/Calendar';
+import Ratings from './components/ratings/Ratings';
 // import './i18n';
 import './App.scss';
 
@@ -69,8 +76,23 @@ function App() {
                 <Route path="/groups/:groupId/materials/:materialId/edit" element={<RoleBasedRoute allowedRoles={['teacher']}><CreateMaterial /></RoleBasedRoute>} />
                 <Route path="/groups/:groupId/materials/:materialId/progress" element={<RoleBasedRoute allowedRoles={['teacher']}><MaterialProgress /></RoleBasedRoute>} />
                 
+                {/* Маршруты для заданий */}
+                <Route path="/groups/:groupId/assignments" element={<AssignmentList />} />
+                <Route path="/groups/:groupId/assignments/create" element={<RoleBasedRoute allowedRoles={['teacher']}><CreateAssignment /></RoleBasedRoute>} />
+                <Route path="/groups/:groupId/assignments/:assignmentId" element={<AssignmentDetail />} />
+                <Route path="/groups/:groupId/assignments/:assignmentId/edit" element={<RoleBasedRoute allowedRoles={['teacher']}><CreateAssignment /></RoleBasedRoute>} />
+                <Route path="/groups/:groupId/assignments/:assignmentId/submit" element={<RoleBasedRoute allowedRoles={['student']}><SubmitSolution /></RoleBasedRoute>} />
+                <Route path="/groups/:groupId/assignments/:assignmentId/submissions" element={<RoleBasedRoute allowedRoles={['teacher']}><SubmissionsList /></RoleBasedRoute>} />
+                
                 <Route path="/chat" element={<ChatPage />} />
                 <Route path="/chat/:recipientId" element={<ChatPage />} />
+                
+                {/* Маршрут для календаря */}
+                <Route path="/calendar" element={<Calendar />} />
+
+                {/* Маршрут для рейтингов */}
+                <Route path="/ratings" element={<Ratings />} />
+
               </Route>
               
               <Route path="*" element={<NotFound />} />

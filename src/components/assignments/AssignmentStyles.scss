@@ -100,8 +100,10 @@
 
 .assignments-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: 1fr;
   gap: 1.5rem;
+  margin-top: 1.5rem;
+}
   
   .assignment-card {
     background-color: rgba(255, 255, 255, 0.9);
@@ -111,58 +113,833 @@
     transition: transform 0.2s, box-shadow 0.2s;
     
     &:hover {
-      transform: translateY(-3px);
+    transform: translateY(-4px);
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     }
     
     h3 {
-      font-size: 1.3rem;
-      margin: 0 0 1rem;
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
       color: #333;
     }
     
     .assignment-meta {
       display: flex;
       justify-content: space-between;
+    align-items: center;
       margin-bottom: 1rem;
+    
+    .deadline {
       font-size: 0.9rem;
-      color: #777;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      background-color: #f0f0f0;
       
-      .deadline {
         &.approaching {
-          color: #f39c12;
+        background-color: #fff3cd;
+        color: #856404;
         }
         
         &.overdue {
-          color: #e74c3c;
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+    }
+    
+    .points {
+      font-weight: 500;
+      color: #555;
+    }
+  }
+  
+  .assignment-description {
+    margin-bottom: 1.2rem;
+    color: #555;
+    line-height: 1.5;
+  }
+  
+  .assignment-actions {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: flex-end;
+    
+    .btn {
+      padding: 0.5rem 1rem;
+      background-color: #f0f0f0;
+      border: none;
+      border-radius: 4px;
+      color: #333;
+      text-decoration: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      
+      &:hover {
+        background-color: #e0e0e0;
+      }
+      
+      &.btn-primary {
+        background-color: #3498db;
+        color: white;
+        
+        &:hover {
+          background-color: #2980b9;
+        }
         }
       }
       
-      .points {
+    .assignment-status {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #e8f4fd;
+      border-radius: 4px;
+      color: #3498db;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.teacher-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+  
+  .btn-primary {
+    background-color: #3498db;
+    color: white;
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    
+    &:hover {
+      background-color: #2980b9;
+    }
+  }
+}
+
+// Assignment detail styles
+.assignment-detail-container {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  margin: 2rem auto;
+  max-width: 900px;
+  width: 100%;
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .assignment-meta {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    
+    .deadline, .submission-status {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      
+      &.approaching {
+        background-color: #fff3cd;
+        color: #856404;
+      }
+      
+      &.overdue {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+      
+      .meta-label {
         font-weight: 500;
+        margin-right: 0.5rem;
+      }
       }
     }
     
-    .assignment-description {
-      margin-bottom: 1.5rem;
-      color: #555;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      
-      // Ограничиваем высоту и добавляем многоточие
-      max-height: 4.5em; // 3 строки
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
+  .assignment-content {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    
+    h2 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: #333;
     }
     
-    .assignment-actions {
+    .description {
+      color: #555;
+      line-height: 1.6;
+      
+      p {
+        margin-bottom: 1rem;
+      }
+    }
+    
+    .attachments {
+      margin-top: 1.5rem;
+      
+      h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.8rem;
+        color: #333;
+      }
+      
+      .attachment-list {
+        list-style: none;
+        padding: 0;
+        
+        .attachment-item {
+          margin-bottom: 0.5rem;
+          
+          .attachment-link {
+            display: inline-flex;
+            align-items: center;
+            color: #3498db;
+            text-decoration: none;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+            background-color: #e8f4fd;
+            transition: background-color 0.2s;
+            
+            &:hover {
+              background-color: #d0e8f7;
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  .action-container, .teacher-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    
+    .btn, .btn-primary {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+    
+    .btn {
+      background-color: #f0f0f0;
+      color: #333;
+      
+      &:hover {
+        background-color: #e0e0e0;
+      }
+    }
+    
+    .btn-primary {
+      background-color: #3498db;
+      color: white;
+      
+      &:hover {
+        background-color: #2980b9;
+      }
+    }
+  }
+  
+  .submission-details {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    
+    h2 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    
+    .submission-content {
+      color: #555;
+      line-height: 1.6;
+      
+      .submission-attachments {
+        margin-top: 1.5rem;
+        
+        h3 {
+          font-size: 1.2rem;
+          margin-bottom: 0.8rem;
+          color: #333;
+        }
+        
+        ul {
+          list-style: none;
+          padding: 0;
+          
+          li {
+            margin-bottom: 0.5rem;
+            
+            a {
+              display: inline-flex;
+              align-items: center;
+              color: #3498db;
+              text-decoration: none;
+              padding: 0.5rem 0.8rem;
+              border-radius: 4px;
+              background-color: #e8f4fd;
+              transition: background-color 0.2s;
+              
+              &:hover {
+                background-color: #d0e8f7;
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+      }
+      
+      .evaluation {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border-radius: 6px;
+        
+        h3 {
+          font-size: 1.2rem;
+          margin-bottom: 0.8rem;
+          color: #333;
+        }
+        
+        &.ai-evaluation {
+          background-color: #f0f7fa;
+          border-left: 4px solid #3498db;
+          
+          &.ai-evaluation-pending {
+            background-color: #f9f1fd;
+            border-left: 4px solid #9b59b6;
+          }
+        }
+        
+        &.teacher-evaluation {
+          background-color: #f7f9fa;
+          border-left: 4px solid #2ecc71;
+        }
+        
+        .score {
+          font-weight: 500;
+          margin-bottom: 0.5rem;
+        }
+        
+        .feedback {
+          color: #555;
+        }
+      }
+    }
+  }
+}
+
+// Submit solution styles
+.submit-solution-container {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  margin: 2rem auto;
+  max-width: 900px;
+  width: 100%;
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .assignment-title {
+    color: #555;
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .deadline-info {
+    margin-bottom: 1.5rem;
+    padding: 0.8rem;
+    border-radius: 6px;
+    background-color: #f7f9fa;
+    
+    .label {
+      font-weight: 500;
+      margin-right: 0.5rem;
+    }
+    
+    .deadline-warning {
+      display: block;
+      margin-top: 0.5rem;
+      color: #e74c3c;
+      font-weight: 500;
+    }
+  }
+  
+  .existing-submission-info {
+    margin-bottom: 1.5rem;
+    padding: 0.8rem;
+    border-radius: 6px;
+    background-color: #e8f4fd;
+    color: #3498db;
+  }
+  
+  .solution-form {
+    margin-top: 1.5rem;
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+      
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+      
+      .solution-textarea {
+        width: 100%;
+        padding: 0.8rem;
+        font-family: 'Courier New', monospace;
+        font-size: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        line-height: 1.4;
+        resize: vertical;
+        transition: border-color 0.2s;
+        
+        &:focus {
+          outline: none;
+          border-color: #3498db;
+          box-shadow: 0 0 0 1px rgba(52, 152, 219, 0.2);
+        }
+      }
+      
+      // Markdown guide styling
+      .markdown-guide {
+        background-color: #f8f9fa;
+        border: 1px solid #e1e4e8;
+        border-radius: 6px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        
+        h4 {
+          margin-top: 0;
+          margin-bottom: 0.5rem;
+          color: #2c3e50;
+          font-size: 1rem;
+        }
+        
+        p {
+          margin-bottom: 1rem;
+          font-size: 0.9rem;
+        }
+        
+        .code-guide {
+          background-color: white;
+          border: 1px solid #eaecef;
+          border-radius: 4px;
+          padding: 1rem;
+          
+          h5 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #1a1a1a;
+          }
+          
+          pre {
+            background-color: #f6f8fa;
+            border-radius: 3px;
+            padding: 0.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+            border: 1px solid #eee;
+            color: #24292e;
+          }
+          
+          ul {
+            padding-left: 1.5rem;
+            margin-bottom: 0;
+            
+            li {
+              margin-bottom: 0.3rem;
+              font-size: 0.85rem;
+            }
+          }
+        }
+      }
+      
+      .file-input {
+        display: block;
+        margin-top: 0.5rem;
+      }
+      
+      .selected-files {
+        margin-top: 1rem;
+        
+        h3 {
+          font-size: 1rem;
+          margin-bottom: 0.5rem;
+          color: #333;
+        }
+        
+        .file-list {
+          list-style: none;
+          padding: 0;
+          
+          .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0.8rem;
+            margin-bottom: 0.5rem;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            
+            .remove-file {
+              background: none;
+              border: none;
+              color: #e74c3c;
+              cursor: pointer;
+              font-weight: bold;
+              padding: 0.2rem 0.5rem;
+              
+              &:hover {
+                background-color: rgba(231, 76, 60, 0.1);
+                border-radius: 4px;
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    .form-actions {
       display: flex;
       justify-content: flex-end;
+      gap: 1rem;
       
-      .btn {
-        padding: 0.6rem 1rem;
+      button {
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+      }
+      
+      .btn-secondary {
+        background-color: #f0f0f0;
+        color: #333;
+        
+        &:hover:not(:disabled) {
+          background-color: #e0e0e0;
+        }
+      }
+      
+      .btn-primary {
+        background-color: #3498db;
+        color: white;
+        
+        &:hover:not(:disabled) {
+          background-color: #2980b9;
+        }
+      }
+    }
+  }
+}
+
+// Submissions list styles
+.submissions-container {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  margin: 2rem auto;
+  max-width: 1200px;
+  width: 100%;
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .assignment-title {
+    color: #555;
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .no-submissions {
+    margin-top: 2rem;
+    padding: 3rem;
+    background-color: white;
+    border-radius: 8px;
+    text-align: center;
+    color: #777;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .submissions-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+    }
+    
+    .submissions-list {
+      background-color: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      
+      h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        color: #333;
+      }
+      
+      .submissions-table {
+        width: 100%;
+        border-collapse: collapse;
+        
+        th, td {
+          padding: 0.8rem;
+          text-align: left;
+          border-bottom: 1px solid #eee;
+        }
+        
+        th {
+          font-weight: 500;
+          color: #555;
+        }
+        
+        .selected-row {
+          background-color: #e8f4fd;
+        }
+        
+        .status-submitted {
+          color: #e67e22;
+        }
+        
+        .status-ai-evaluated {
+          color: #3498db;
+        }
+        
+        .status-teacher-evaluated {
+          color: #2ecc71;
+        }
+        
+        .status-pending-review {
+          color: #9b59b6;
+        }
+        
+        .btn-view {
+          padding: 0.3rem 0.8rem;
+          background-color: #f0f0f0;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.2s;
+          
+          &:hover {
+            background-color: #e0e0e0;
+          }
+        }
+      }
+    }
+    
+    .submission-details, .no-submission-selected {
+      background-color: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      
+      h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        color: #333;
+      }
+    }
+    
+    .no-submission-selected {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #777;
+      height: 100%;
+      min-height: 300px;
+    }
+    
+    .submission-details {
+      .submission-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        
+        .label {
+          font-weight: 500;
+          margin-right: 0.5rem;
+        }
+      }
+      
+      .solution-content {
+        margin-bottom: 1.5rem;
+        
+        h4 {
+          font-size: 1.1rem;
+          margin-bottom: 0.8rem;
+          color: #333;
+        }
+        
+        .solution-text {
+          background-color: #f7f9fa;
+          padding: 1rem;
+          border-radius: 6px;
+          white-space: pre-wrap;
+          line-height: 1.5;
+        }
+        
+        .solution-attachments {
+          margin-top: 1rem;
+          
+          ul {
+            list-style: none;
+            padding: 0;
+            
+            li {
+              margin-bottom: 0.5rem;
+              
+              a {
+                display: inline-flex;
+                align-items: center;
+                color: #3498db;
+                text-decoration: none;
+                padding: 0.5rem 0.8rem;
+                border-radius: 4px;
+                background-color: #e8f4fd;
+                transition: background-color 0.2s;
+                
+                &:hover {
+                  background-color: #d0e8f7;
+                  text-decoration: underline;
+                }
+              }
+            }
+          }
+        }
+      }
+      
+      .ai-evaluation, .teacher-evaluation {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        border-radius: 6px;
+        
+        h4 {
+          font-size: 1.1rem;
+          margin-bottom: 0.8rem;
+          color: #333;
+        }
+        
+        .label {
+          font-weight: 500;
+          margin-right: 0.5rem;
+        }
+      }
+      
+      .ai-evaluation {
+        background-color: #f0f7fa;
+        border-left: 4px solid #3498db;
+      }
+      
+      .teacher-evaluation {
+        background-color: #f7f9fa;
+        border-left: 4px solid #2ecc71;
+      }
+      
+      .evaluation-form {
+        margin-top: 1.5rem;
+        
+        h4 {
+          font-size: 1.1rem;
+          margin-bottom: 1rem;
+          color: #333;
+        }
+        
+        .form-group {
+          margin-bottom: 1rem;
+          
+          label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+          }
+          
+          input, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            
+            &:focus {
+              outline: none;
+              border-color: #3498db;
+            }
+          }
+          
+          input[type="number"] {
+            width: 100px;
+          }
+        }
+        
+        .btn-primary {
+          padding: 0.8rem 1.5rem;
+          background-color: #3498db;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color 0.2s;
+          
+          &:hover:not(:disabled) {
+            background-color: #2980b9;
+          }
+          
+          &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+          }
+        }
       }
     }
   }
@@ -178,5 +955,254 @@
     font-size: 1.1rem;
     color: #777;
     margin: 0 0 1.5rem;
+  }
+}
+
+// Add styles for markdown content
+.markdown-content {
+  // Basic typography
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.6rem; }
+  h3 { font-size: 1.4rem; }
+  h4 { font-size: 1.2rem; }
+  h5 { font-size: 1.1rem; }
+  h6 { font-size: 1rem; }
+  
+  p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+  
+  // Lists
+  ul, ol {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+    
+    li {
+      margin-bottom: 0.5rem;
+    }
+  }
+  
+  // Block quotes
+  blockquote {
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #3498db;
+    color: #555;
+  }
+  
+  // Code blocks
+  pre {
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    overflow: hidden;
+    
+    div {
+      border-radius: 6px;
+    }
+  }
+  
+  // Inline code
+  code {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+  
+  // Links
+  a {
+    color: #3498db;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  // Tables
+  table {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-collapse: collapse;
+    
+    th, td {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+    }
+    
+    th {
+      background-color: #f5f5f5;
+      font-weight: 600;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  }
+  
+  // Horizontal rule
+  hr {
+    margin: 1.5rem 0;
+    border: 0;
+    border-top: 1px solid #eee;
+  }
+  
+  // Images
+  img {
+    max-width: 100%;
+    height: auto;
+    margin: 1rem 0;
+    border-radius: 4px;
+  }
+}
+
+// Improve assignment content
+.assignment-content {
+  .description {
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+}
+
+// Improve solution display
+.solution-code {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  
+  pre {
+    margin: 0 !important;
+  }
+}
+
+// Improve AI and teacher evaluation sections
+.ai-evaluation,
+.teacher-evaluation {
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  
+  h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  
+  .evaluation-score {
+    font-weight: 500;
+    margin-bottom: 1rem;
+    
+    .label {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+  }
+  
+  .evaluation-feedback {
+    .label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+.ai-evaluation {
+  background-color: #f0f7fa;
+  border-left: 4px solid #3498db;
+  
+  &.ai-evaluation-pending {
+    background-color: #f9f1fd;
+    border-left: 4px solid #9b59b6;
+  }
+}
+
+.teacher-evaluation {
+  background-color: #f7f9fa;
+  border-left: 4px solid #2ecc71;
+}
+
+// Solution preview styles
+.solution-preview-container {
+  margin: 1.5rem 0;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  overflow: hidden;
+  
+  .preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e1e4e8;
+    
+    h4 {
+      margin: 0;
+      font-size: 1rem;
+      color: #2c3e50;
+    }
+    
+    .preview-toggle {
+      background: none;
+      border: none;
+      color: #3498db;
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 0.3rem 0.5rem;
+      border-radius: 4px;
+      
+      &:hover {
+        background-color: rgba(52, 152, 219, 0.1);
+      }
+    }
+  }
+  
+  .preview-content {
+    padding: 1rem;
+    background-color: white;
+    min-height: 100px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .empty-preview {
+    padding: 2rem;
+    text-align: center;
+    color: #6c757d;
+    background-color: white;
+    font-style: italic;
+  }
+}
+
+.preview-toggle-container {
+  margin: 1rem 0;
+  text-align: right;
+  
+  .preview-toggle-button {
+    background-color: #f8f9fa;
+    border: 1px solid #e1e4e8;
+    color: #3498db;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    
+    &:hover {
+      background-color: #f1f5f9;
+    }
   }
 } 

@@ -1,0 +1,630 @@
+// QazaqCode Calendar Component Styles
+// Using colors from parent style
+$primary-color: #00685A; // Main teal color from QazaqCode header
+$primary-light: #008E7B;
+$primary-dark: #00463D;
+$secondary-color: #3498db;
+$secondary-light: #5DADE2;
+$secondary-dark: #2874A6;
+$accent-color: #FF7700;
+$success-color: #2ecc71;
+$warning-color: #f39c12;
+$danger-color: #e74c3c;
+$text-dark: #2c3e50;
+$text-light: #34495e;
+$text-muted: #7f8c8d;
+$background-light: #f8f9fa;
+$background-medium: #f1f2f6;
+$background-card: #ffffff;
+$border-color: #dfe4ea;
+
+// Calendar-specific colors
+$calendar-grid-bg: #ffffff;
+$calendar-header-bg: linear-gradient(120deg, $primary-color, $primary-light);
+$calendar-today-bg: rgba($primary-color, 0.1);
+$calendar-selected-bg: rgba($primary-color, 0.2);
+$calendar-weekend-color: $text-light;
+$calendar-day-hover-bg: rgba($primary-color, 0.05);
+
+// Event type colors
+$event-assignment-color: $secondary-color;
+$event-test-color: $warning-color;
+$event-lesson-color: $success-color;
+$event-other-color: $accent-color;
+
+// Shadows and effects
+$card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+$hover-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+$focus-shadow: 0 0 0 3px rgba(0, 104, 90, 0.2);
+
+// Mixins
+@mixin card {
+  background-color: $background-card;
+  border-radius: 12px;
+  box-shadow: $card-shadow;
+  overflow: hidden;
+}
+
+@mixin button-base {
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+@mixin primary-button {
+  @include button-base;
+  background-color: $primary-color;
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: $primary-light;
+  }
+  
+  &:active:not(:disabled) {
+    background-color: $primary-dark;
+  }
+  
+  &:focus {
+    outline: none;
+    box-shadow: $focus-shadow;
+  }
+}
+
+@mixin secondary-button {
+  @include button-base;
+  background-color: $background-medium;
+  color: $text-dark;
+  
+  &:hover:not(:disabled) {
+    background-color: darken($background-medium, 5%);
+  }
+  
+  &:active:not(:disabled) {
+    background-color: darken($background-medium, 10%);
+  }
+  
+  &:focus {
+    outline: none;
+    box-shadow: $focus-shadow;
+  }
+}
+
+// Calendar component styles
+.qazaq-calendar {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: $text-dark;
+  line-height: 1.5;
+  
+  .calendar-container {
+    @include card;
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0;
+    overflow: visible;
+  }
+  
+  .back-link {
+    display: flex;
+    align-items: center;
+    color: white;
+    margin: 0;
+    padding: 1.5rem;
+    font-weight: 500;
+    transition: color 0.2s;
+    
+    &:before {
+      content: "←";
+      margin-right: 0.5rem;
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+    
+    &:hover {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+    }
+  }
+  
+  .calendar-header {
+    background: $calendar-header-bg;
+    color: white;
+    padding: 0.5rem 1.5rem 2rem;
+    position: relative;
+    
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .calendar-subtitle {
+      margin-top: 0.5rem;
+      margin-bottom: 0;
+      opacity: 0.9;
+      font-size: 1.1rem;
+    }
+  }
+  
+  .calendar-controls {
+    background-color: white;
+    margin-top: -1.5rem;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    border-radius: 10px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    
+    .month-navigation {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      
+      .month-nav-button {
+        background: none;
+        border: none;
+        color: $text-light;
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        
+        &:hover {
+          background-color: $background-light;
+          color: $primary-color;
+        }
+        
+        .arrow {
+          font-weight: bold;
+        }
+      }
+      
+      .current-month {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: $text-dark;
+        min-width: 180px;
+        text-align: center;
+      }
+    }
+    
+    .view-legend {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        color: $text-light;
+        
+        .legend-dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          
+          &.assignment {
+            background-color: $event-assignment-color;
+          }
+          
+          &.test {
+            background-color: $event-test-color;
+          }
+          
+          &.lesson {
+            background-color: $event-lesson-color;
+          }
+          
+          &.other {
+            background-color: $event-other-color;
+          }
+        }
+      }
+    }
+  }
+  
+  .calendar-grid {
+    padding: 1.5rem;
+    
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      margin-bottom: 0.5rem;
+      
+      .weekday {
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: $text-muted;
+        padding: 0.5rem;
+        
+        &:nth-child(6), &:nth-child(7) {
+          color: $calendar-weekend-color;
+        }
+      }
+    }
+    
+    .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.5rem;
+      
+      .day {
+        position: relative;
+        aspect-ratio: 1/1;
+        background-color: $background-light;
+        border-radius: 10px;
+        padding: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        flex-direction: column;
+        
+        &:hover:not(.empty) {
+          background-color: $calendar-day-hover-bg;
+          transform: translateY(-2px);
+          box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        &.empty {
+          background-color: transparent;
+          cursor: default;
+        }
+        
+        &.today {
+          background-color: $calendar-today-bg;
+          border: 2px solid $primary-color;
+          
+          .day-number {
+            font-weight: 700;
+            color: $primary-color;
+          }
+        }
+        
+        &.selected {
+          background-color: $calendar-selected-bg;
+          border: 2px solid $primary-color;
+          box-shadow: 0 4px 10px rgba($primary-color, 0.2);
+          transform: translateY(-3px);
+          
+          .day-number {
+            font-weight: 700;
+            color: $primary-dark;
+          }
+        }
+        
+        &.has-events {
+          &:after {
+            content: "";
+            position: absolute;
+            bottom: 0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: $primary-color;
+          }
+        }
+        
+        .day-number {
+          font-size: 1rem;
+          font-weight: 500;
+          margin-bottom: 0.5rem;
+        }
+        
+        .day-events {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.25rem;
+          
+          .event-indicator {
+            font-size: 0.7rem;
+            line-height: 1;
+            
+            &.event-assignment {
+              color: $event-assignment-color;
+            }
+            
+            &.event-test {
+              color: $event-test-color;
+            }
+            
+            &.event-lesson {
+              color: $event-lesson-color;
+            }
+            
+            &.event-other {
+              color: $event-other-color;
+            }
+          }
+          
+          .more-events {
+            font-size: 0.7rem;
+            color: $text-muted;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+    
+    .calendar-loading {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 3px solid rgba($primary-color, 0.2);
+        border-top-color: $primary-color;
+        animation: spin 1s infinite linear;
+        margin-bottom: 1rem;
+      }
+      
+      p {
+        color: $text-muted;
+        font-size: 0.9rem;
+      }
+    }
+  }
+  
+  .day-details {
+    margin: 0 1.5rem 1.5rem;
+    padding: 1.5rem;
+    background-color: $background-light;
+    border-radius: 10px;
+    
+    .day-details-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      
+      h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: $text-dark;
+      }
+      
+      .add-event-button {
+        @include primary-button;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+    
+    .event-form {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      
+      .form-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        
+        @media (max-width: 768px) {
+          flex-direction: column;
+        }
+      }
+      
+      .form-group {
+        flex: 1;
+        margin-bottom: 1rem;
+        
+        label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 500;
+          color: $text-dark;
+        }
+        
+        input, select, textarea {
+          width: 100%;
+          padding: 0.75rem;
+          border: 1px solid $border-color;
+          border-radius: 6px;
+          font-size: 1rem;
+          
+          &:focus {
+            outline: none;
+            border-color: $primary-color;
+            box-shadow: $focus-shadow;
+          }
+        }
+        
+        textarea {
+          resize: vertical;
+        }
+      }
+      
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        
+        .cancel-button {
+          @include secondary-button;
+          padding: 0.5rem 1rem;
+        }
+        
+        .save-button {
+          @include primary-button;
+          padding: 0.5rem 1rem;
+        }
+      }
+    }
+    
+    .events-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      
+      .event-card {
+        display: flex;
+        background-color: white;
+        border-radius: 10px;
+        padding: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        position: relative;
+        transition: all 0.2s;
+        overflow: hidden;
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        &:before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 5px;
+          border-radius: 3px 0 0 3px;
+        }
+        
+        &.event-assignment {
+          &:before {
+            background-color: $event-assignment-color;
+          }
+        }
+        
+        &.event-test {
+          &:before {
+            background-color: $event-test-color;
+          }
+        }
+        
+        &.event-lesson {
+          &:before {
+            background-color: $event-lesson-color;
+          }
+        }
+        
+        &.event-other {
+          &:before {
+            background-color: $event-other-color;
+          }
+        }
+        
+        .event-time {
+          font-weight: 600;
+          color: $text-muted;
+          margin-right: 1rem;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+        }
+        
+        .event-content {
+          flex: 1;
+          
+          .event-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: $text-dark;
+            display: flex;
+            align-items: center;
+            
+            .event-icon {
+              margin-right: 0.5rem;
+            }
+          }
+          
+          .event-description {
+            color: $text-light;
+            font-size: 0.9rem;
+          }
+        }
+        
+        .delete-event {
+          background: none;
+          border: none;
+          color: $text-muted;
+          font-size: 1.25rem;
+          cursor: pointer;
+          opacity: 0.5;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          transition: all 0.2s;
+          
+          &:hover {
+            background-color: rgba($danger-color, 0.1);
+            color: $danger-color;
+            opacity: 1;
+          }
+        }
+      }
+      
+      .no-events {
+        background-color: white;
+        border-radius: 10px;
+        padding: 2rem;
+        text-align: center;
+        
+        p {
+          color: $text-muted;
+          margin-bottom: 1rem;
+        }
+        
+        .add-event-inline {
+          background: none;
+          border: 1px dashed $primary-color;
+          color: $primary-color;
+          padding: 0.5rem 1rem;
+          border-radius: 6px;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: all 0.2s;
+          
+          &:hover {
+            background-color: rgba($primary-color, 0.05);
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 

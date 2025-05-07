@@ -4,7 +4,7 @@ import useAuth from '../../hooks/useAuth';
 import { getUserProfile, updateUserProfile, getStudentGroups } from '../../services/api';
 import './Dashboard.scss';
 
-const StudentDashboard = () => {
+export const StudentDashboard = () => {
   const { user, loading: authLoading } = useAuth();
   const [userProfile, setUserProfile] = useState(null);
   const [groups, setGroups] = useState([]);
@@ -23,7 +23,7 @@ const StudentDashboard = () => {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  const grades = [7, 8, 9, 10, 11];
+  const grades = [6, 7, 8, 9, 10, 11];
   const gradeLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
   useEffect(() => {
@@ -223,10 +223,10 @@ const StudentDashboard = () => {
                   <span className="info-label">Логин:</span>
                   <span className="info-value">{userProfile.login}</span>
                 </div>
-                <div className="info-row">
+                {/* <div className="info-row">
                   <span className="info-label">Баллы:</span>
                   <span className="info-value points">{userProfile.points}</span>
-                </div>
+                </div> */}
               </div>
             )}
           </div>
@@ -263,9 +263,9 @@ const StudentDashboard = () => {
               <h3>Рейтинг</h3>
               <p>Жалпы рейтингтегі орныңызды қараңыз</p>
             </Link>
-            <Link to="/lessons" className="quick-link-card quick-link-materials">
-              <h3>Сабақтар</h3>
-              <p>Сабақтарды өтіп, тапсырмаларды шешіңіз</p>
+            <Link to="/calendar" className="quick-link-card quick-link-materials">
+              <h3>Оқу күнтізбесі</h3>
+              <p>Сабақ кестесі мен маңызды оқиғаларды қараңыз</p>
             </Link>
             <Link to="/chat" className="quick-link-card quick-link-chat">
               <h3>Чат</h3>

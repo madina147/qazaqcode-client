@@ -131,7 +131,7 @@ const CreateTest = () => {
       {
         id: newId,
         text: '',
-        points: 2,
+        points: 1,
         options: [
           { id: 1, text: '', isCorrect: false },
           { id: 2, text: '', isCorrect: false }

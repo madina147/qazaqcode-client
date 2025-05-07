@@ -106,7 +106,7 @@ const ChatMessage = ({ message }) => {
           {message.sender.firstName} {message.sender.lastName}
         </span>
         <span className="sender-role">
-          {message.sender.role === 'teacher' ? 'Оқытушы' : 'Студент'}
+          {message.sender.role === 'teacher' ? 'Оқытушы' : 'Оқушы'}
         </span>
         {message.messageType === 'question' && (
           <span className="message-type-badge">

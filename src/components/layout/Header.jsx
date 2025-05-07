@@ -71,11 +71,11 @@ const Header = () => {
                 </li>
                 <li>
                   <Link 
-                    to="/tasks" 
+                    to="/calendar" 
                     onClick={closeMenu}
-                    className={window.location.pathname.includes('/tasks') ? 'active' : ''}
+                    className={window.location.pathname.includes('/calendar') ? 'active' : ''}
                   >
-                    Тапсырмалар
+                    Оқу кестесі
                   </Link>
                 </li>
                 <li>

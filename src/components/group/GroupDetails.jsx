@@ -50,7 +50,7 @@ const GroupDetails = () => {
 
   const addStudent = async () => {
     if (!selectedStudent) {
-      setAddStudentError('Студентті таңдаңыз');
+      setAddStudentError('Оқушыны таңдаңыз');
       return;
     }
 
@@ -73,14 +73,14 @@ const GroupDetails = () => {
       if (err.response && err.response.data && err.response.data.message === 'Student already in group') {
         setAddStudentError('Бұл оқушы топта бар');
       } else {
-        setAddStudentError('Студентті қосу кезінде қате пайда болды');
+        setAddStudentError('Оқушыны қосу кезінде қате пайда болды');
       }
     }
   };
 
   const removeStudent = async (studentId) => {
     if (!studentId) {
-      alert('Жарамсыз студент идентификаторы');
+      alert('Жарамсыз Оқушы идентификаторы');
       return;
     }
 
@@ -102,7 +102,7 @@ const GroupDetails = () => {
       if (err.response && err.response.data) {
         const errorMessage = err.response.data.message;
         if (errorMessage === 'Invalid student ID' || errorMessage === 'Invalid student ID format') {
-          alert('Жарамсыз студент идентификаторы');
+          alert('Жарамсыз оқушы идентификаторы');
         } else if (errorMessage === 'Student not in group') {
           alert('Бұл оқушы топта емес');
         } else if (errorMessage === 'Student not found') {
@@ -117,7 +117,7 @@ const GroupDetails = () => {
   };
 
   const createAssignment = () => {
-    navigate(`/groups/${id}/assignment/create`);
+    navigate(`/groups/${id}/assignments/create`);
   };
 
   const createTest = () => {

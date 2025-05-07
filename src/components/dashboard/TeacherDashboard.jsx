@@ -278,9 +278,9 @@ const TeacherDashboard = () => {
               <h3>Оқушылардың рейтингі</h3>
               <p>Оқушылардың рейтингі мен үлгерімін қараңыз</p>
             </Link>
-            <Link to="/lessons" className="quick-link-card quick-link-materials">
-              <h3>Материалдар</h3>
-              <p>Оқу материалдары мен тапсырмаларды қараңыз</p>
+            <Link to="/calendar" className="quick-link-card quick-link-materials">
+              <h3>Оқу күнтізбесі</h3>
+              <p>Сабақ кестесі мен маңызды оқиғаларды қараңыз</p>
             </Link>
             <Link to="/chat" className="quick-link-card quick-link-chat">
               <h3>Чат</h3>

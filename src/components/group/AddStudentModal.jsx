@@ -36,7 +36,7 @@ const AddStudentModal = ({ onClose, onSubmit, groupId }) => {
         setStudents(response.data);
       } catch (err) {
         console.error('Error fetching students:', err);
-        setError('Студенттер тізімін жүктеу кезінде қате пайда болды');
+        setError('Оқушылар тізімін жүктеу кезінде қате пайда болды');
       }
     };
     

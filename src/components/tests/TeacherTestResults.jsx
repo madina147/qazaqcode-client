@@ -219,7 +219,7 @@ const TeacherTestResults = () => {
       <div className="teacher-results-container">
         <div className="loading-spinner">
           <div className="spinner"></div>
-          <p>Загрузка результатов теста...</p>
+          <p>Тест нәтижелері жүктелуде...</p>
         </div>
       </div>
     );
@@ -232,10 +232,10 @@ const TeacherTestResults = () => {
           <div className="error-icon">
             <FaTimes />
           </div>
-          <h3>Ошибка при загрузке данных</h3>
+          <h3>Деректерді жүктеу кезінде қате</h3>
           <p>{error}</p>
           <Link to={`/groups/${groupId}/tests`} className="back-button">
-            <FaArrowLeft /> Вернуться к списку тестов
+            <FaArrowLeft /> Тесттер тізіміне оралу
           </Link>
         </div>
       </div>
@@ -246,10 +246,10 @@ const TeacherTestResults = () => {
     return (
       <div className="teacher-results-container">
         <div className="not-found-message">
-          <h3>Тест не найден</h3>
-          <p>Запрашиваемый тест не существует или у вас нет к нему доступа.</p>
+          <h3>Тест табылмады</h3>
+          <p>Сұралған тест жоқ немесе сізде оған қол жеткізу құқығы жоқ.</p>
           <Link to={`/groups/${groupId}/tests`} className="back-button">
-            <FaArrowLeft /> Вернуться к списку тестов
+            <FaArrowLeft /> Тесттер тізіміне оралу
           </Link>
         </div>
       </div>
@@ -262,7 +262,7 @@ const TeacherTestResults = () => {
     <div className="teacher-results-container">
       <div className="results-header">
         <Link to={`/groups/${groupId}/tests`} className="back-button">
-          <FaArrowLeft /> К списку тестов
+          <FaArrowLeft /> Тесттер тізіміне
         </Link>
         <h1>{test.title || test.name}</h1>
         {test.description && <p className="test-description">{test.description}</p>}
@@ -274,58 +274,58 @@ const TeacherTestResults = () => {
             <FaUser />
           </div>
           <div className="stat-value">{stats.totalStudents}</div>
-          <div className="stat-label">Студентов</div>
+          <div className="stat-label">Оқушылар</div>
         </div>
         <div className="stat-card">
           <div className="stat-icon">
             <FaChartBar />
           </div>
           <div className="stat-value">{stats.averageScore}%</div>
-          <div className="stat-label">Средний балл</div>
+          <div className="stat-label">Орташа балл</div>
         </div>
         <div className="stat-card">
           <div className="stat-icon">
             <FaCheck />
           </div>
           <div className="stat-value">{stats.highestScore}%</div>
-          <div className="stat-label">Лучший результат</div>
+          <div className="stat-label">Ең жоғары нәтиже</div>
         </div>
         <div className="stat-card">
           <div className="stat-icon">
             <FaFileAlt />
           </div>
           <div className="stat-value">{stats.completionRate}%</div>
-          <div className="stat-label">Завершено</div>
+          <div className="stat-label">Аяқталды</div>
         </div>
       </div>
 
       <div className="results-content">
         <div className="students-list">
           <div className="list-header">
-            <h3>Результаты студентов</h3>
+            <h3>Оқушылардың нәтижелері</h3>
             <div className="filter-controls">
               <div className="search-box">
                 <FaSearch className="search-icon" />
                 <input 
                   type="text" 
-                  placeholder="Поиск студента..." 
+                  placeholder="Оқушыны іздеу..." 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               <div className="filter-options">
                 <select value={filterBy} onChange={(e) => setFilterBy(e.target.value)}>
-                  <option value="all">Все</option>
-                  <option value="completed">Завершенные</option>
-                  <option value="notCompleted">Не завершенные</option>
+                  <option value="all">Барлығы</option>
+                  <option value="completed">Аяқталған</option>
+                  <option value="notCompleted">Аяқталмаған</option>
                 </select>
               </div>
               <div className="sort-controls">
                 <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                  <option value="name">По имени</option>
-                  <option value="score">По баллам</option>
-                  <option value="time">По времени</option>
-                  <option value="date">По дате</option>
+                  <option value="name">Аты бойынша</option>
+                  <option value="score">Балл бойынша</option>
+                  <option value="time">Уақыт бойынша</option>
+                  <option value="date">Күні бойынша</option>
                 </select>
                 <button className="sort-direction" onClick={toggleSortDirection}>
                   {sortDirection === 'asc' ? <FaSortAmountUp /> : <FaSortAmountDown />}
@@ -337,7 +337,7 @@ const TeacherTestResults = () => {
           <div className="students-results-list">
             {sortedResults.length === 0 ? (
               <div className="no-results">
-                <p>Нет результатов для отображения</p>
+                <p>Көрсетілетін нәтижелер жоқ</p>
               </div>
             ) : (
               sortedResults.map((result) => {
@@ -386,12 +386,12 @@ const TeacherTestResults = () => {
           {selectedStudent ? (
             <>
               <h3>
-                Результат: {selectedStudent.student?.lastName} {selectedStudent.student?.firstName}
+                Нәтиже: {selectedStudent.student?.lastName} {selectedStudent.student?.firstName}
               </h3>
               
               <div className="score-summary">
                 <div className="score-card">
-                  <div className="score-label">Общий результат</div>
+                  <div className="score-label">Жалпы нәтиже</div>
                   <div className={`score-value ${getScoreClass(selectedStudent.percentage || selectedStudent.score || 0)}`}>
                     {Math.round(selectedStudent.percentage || selectedStudent.score || 0)}%
                   </div>
@@ -405,14 +405,14 @@ const TeacherTestResults = () => {
                 </div>
                 
                 <div className="score-card">
-                  <div className="score-label">Время выполнения</div>
+                  <div className="score-label">Орындау уақыты</div>
                   <div className="score-value">
                     {formatTime(selectedStudent.timeSpent || 0)}
                   </div>
                 </div>
                 
                 <div className="score-card">
-                  <div className="score-label">Дата сдачи</div>
+                  <div className="score-label">Тапсыру күні</div>
                   <div className="score-value date">
                     {formatDate(selectedStudent.completedAt)}
                   </div>
@@ -420,7 +420,7 @@ const TeacherTestResults = () => {
               </div>
               
               <div className="student-answers">
-                <h4>Ответы на вопросы</h4>
+                <h4>Сұрақтарға жауаптар</h4>
                 
                 {test.questions && test.questions.map((question, index) => {
                   const isCorrect = isAnswerCorrect(question, selectedStudent.answers || []);
@@ -432,10 +432,10 @@ const TeacherTestResults = () => {
                   return (
                     <div key={question._id} className={`question-answer ${isCorrect ? 'correct' : 'incorrect'}`}>
                       <div className="question-header">
-                        <div className="question-number">Вопрос {index + 1}</div>
+                        <div className="question-number">Сұрақ {index + 1}</div>
                         <div className={`question-status ${isCorrect ? 'correct' : 'incorrect'}`}>
                           {isCorrect ? <FaCheck className="status-icon" /> : <FaTimes className="status-icon" />}
-                          {isCorrect ? 'Правильно' : 'Неправильно'}
+                          {isCorrect ? 'Дұрыс' : 'Қате'}
                         </div>
                       </div>
                       
@@ -475,8 +475,8 @@ const TeacherTestResults = () => {
           ) : (
             <div className="no-student-selected">
               <FaEye className="select-icon" />
-              <h3>Выберите студента</h3>
-              <p>Выберите студента из списка слева, чтобы посмотреть детальный результат.</p>
+              <h3>Оқушыны таңдаңыз</h3>
+              <p>Толық нәтижені көру үшін сол жақтағы тізімнен оқушыны таңдаңыз.</p>
             </div>
           )}
         </div>

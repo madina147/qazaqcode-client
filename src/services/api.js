@@ -194,7 +194,154 @@ export const createAssignment = (groupId, assignmentData) => {
 };
 
 export const getGroupAssignments = (groupId) => {
-  return api.get(`/api/groups/${groupId}/assignments`);
+  console.log(`API call: getGroupAssignments for group ${groupId}`);
+  
+  // Проверка на валидный ID
+  if (!groupId || groupId === 'undefined') {
+    console.error('Invalid groupId provided to getGroupAssignments');
+    return Promise.reject(new Error('Invalid group ID'));
+  }
+  
+  // Проверка на валидный MongoDB ObjectId
+  const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(groupId);
+  if (!isValidObjectId) {
+    console.error('Invalid ObjectId format in getGroupAssignments');
+    return Promise.reject(new Error('Invalid group ID format'));
+  }
+  
+  // Прямой запрос к публичному API без дополнительных обработок и перенаправлений
+  console.log(`Making direct request to assignments-public endpoint for group ${groupId}`);
+  
+  return api.get(`/api/groups/${groupId}/assignments-public`, {
+    timeout: 10000,
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+      'X-Client-Version': '1.0'
+    }
+  })
+  .then(response => {
+    console.log('Assignment public API response received:', {
+      status: response.status,
+      hasData: !!response.data,
+      dataType: typeof response.data
+    });
+    
+    // Проверяем, что в ответе есть assignments
+    if (response.data && response.data.assignments && Array.isArray(response.data.assignments)) {
+      console.log(`Found ${response.data.assignments.length} assignments`);
+      return { data: response.data.assignments };
+    }
+    
+    // Если нет assignments или они не массив, возвращаем пустой массив
+    console.warn('Response does not contain assignments array');
+    return { data: [] };
+  })
+  .catch(error => {
+    console.error(`Error fetching assignments for group ${groupId}:`, error);
+    
+    if (error.response) {
+      console.error('Server response error details:', {
+        status: error.response.status,
+        data: error.response.data,
+        headers: JSON.stringify(error.response.headers)
+      });
+    } else if (error.request) {
+      console.error('No response received. Request details:', {
+        url: error.config?.url,
+        method: error.config?.method,
+        timeout: error.config?.timeout
+      });
+    }
+    
+    throw error;
+  });
+};
+
+// Added API functions for submissions
+export const getAssignment = (assignmentId, groupId = null) => {
+  if (!assignmentId) {
+    return Promise.reject(new Error('Invalid assignment ID'));
+  }
+  
+  // Create a function that handles retries and endpoints
+  const fetchWithRetry = async (retries = 2, delay = 1000) => {
+    let lastError = null;
+    
+    // If we have a groupId, prioritize the direct group-specific endpoint
+    if (groupId) {
+      try {
+        console.log(`Trying to fetch assignment ${assignmentId} directly from group ${groupId}`);
+        return await api.get(`/api/groups/${groupId}/assignments/${assignmentId}`);
+      } catch (groupSpecificError) {
+        console.error(`Failed to fetch from specific group:`, groupSpecificError);
+        lastError = groupSpecificError;
+        // Fall through to next approach
+      }
+    }
+    
+    // Try the direct assignment endpoint as fallback
+    try {
+      console.log(`Fetching assignment ${assignmentId} via direct endpoint`);
+      return await api.get(`/api/assignments/${assignmentId}`);
+    } catch (directError) {
+      console.error(`Direct assignment fetch failed:`, directError);
+      lastError = directError;
+    }
+    
+    // If we get here, all attempts failed for this round
+    if (retries <= 0) {
+      console.error(`All attempts to fetch assignment ${assignmentId} failed`);
+      throw lastError || new Error('Failed to fetch assignment');
+    }
+    
+    // Wait and retry
+    console.log(`Retrying assignment fetch in ${delay}ms...`);
+    await new Promise(resolve => setTimeout(resolve, delay));
+    return fetchWithRetry(retries - 1, delay * 2);
+  };
+  
+  return fetchWithRetry();
+};
+
+export const submitSolution = (assignmentId, solutionData, groupId = null) => {
+  const formData = new FormData();
+  
+  // Add solution text
+  formData.append('solution', solutionData.solution);
+  
+  // Add attachment files if any
+  if (solutionData.attachments && solutionData.attachments.length > 0) {
+    solutionData.attachments.forEach((file) => {
+      formData.append('attachments', file);
+    });
+  }
+  
+  // Use group-specific endpoint if groupId is provided
+  const endpoint = groupId 
+    ? `/api/groups/${groupId}/assignments/${assignmentId}/submit`
+    : `/api/assignments/${assignmentId}/submit`;
+  
+  return api.post(endpoint, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+export const getMySubmission = (assignmentId, groupId = null) => {
+  if (groupId) {
+    return api.get(`/api/groups/${groupId}/assignments/${assignmentId}/my-submission`);
+  }
+  return api.get(`/api/assignments/${assignmentId}/my-submission`);
+};
+
+export const getAssignmentSubmissions = (assignmentId) => {
+  return api.get(`/api/assignments/${assignmentId}/submissions`);
+};
+
+export const evaluateSubmission = (submissionId, evaluationData) => {
+  return api.put(`/api/assignments/submissions/${submissionId}/evaluate`, evaluationData);
 };
 
 // Tests

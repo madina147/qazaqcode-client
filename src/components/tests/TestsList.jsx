@@ -105,7 +105,7 @@ const TestsList = () => {
             {isTeacher ? (
               <>
                 <h3>Бұл топта тесттер жоқ</h3>
-                <p>Студенттерге арналған жаңа тест құрыңыз</p>
+                <p>Оқушыларға арналған жаңа тест құрыңыз</p>
                 <Link to={`/groups/${groupId}/tests/create`} className="create-button">
                   <FaPlus className="icon" />
                   Тест құру
