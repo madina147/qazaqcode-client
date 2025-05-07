@@ -32,7 +32,7 @@ const ChatMessage = ({ message }) => {
     if (message.fileUrl) {
       return (
         <div className="file-attachment">
-          <a href={`https://34.34.73.209${message.fileUrl}`} target="_blank" rel="noopener noreferrer" className="file-link">
+          <a href={`http://34.34.73.209${message.fileUrl}`} target="_blank" rel="noopener noreferrer" className="file-link">
             <i className="file-icon">📄</i>
             <span className="file-name">{message.fileName || 'python-file.py'}</span>
           </a>

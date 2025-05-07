@@ -264,7 +264,7 @@ const MaterialView = () => {
                   controls
                   preload="metadata"
                   width="100%"
-                  src={`https://34.34.73.209${material.videoPath}?t=${new Date().getTime()}`} // Add timestamp to avoid caching issues
+                  src={`http://34.34.73.209${material.videoPath}?t=${new Date().getTime()}`} // Add timestamp to avoid caching issues
                   onError={() => setVideoError(true)}
                 ></video>
               )}

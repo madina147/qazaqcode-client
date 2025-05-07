@@ -16,7 +16,7 @@ const AssignmentDetail = () => {
   const [submission, setSubmission] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const API_URL = import.meta.env.VITE_API_URL || 'https://34.34.73.209';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://34.34.73.209';
 
   useEffect(() => {
     const fetchData = async () => {
